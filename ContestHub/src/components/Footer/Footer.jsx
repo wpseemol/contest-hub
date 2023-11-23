@@ -1,5 +1,5 @@
 const Footer = () => {
-    return <div>this is footer</div>;
+    return <footer className="font-montserratFont">this is footer</footer>;
 };
 
 export default Footer;
