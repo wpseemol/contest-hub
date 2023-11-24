@@ -18,7 +18,7 @@ const NavBar = () => {
     return (
         <nav className="font-montserratFont ">
             <Container>
-                <div className="flex items-center justify-between py-4 relative">
+                <div className="flex items-center justify-between py-4 px-8 sm:px-0 relative">
                     <Link to="/">
                         <div className="flex items-center">
                             <figure className="w-12">

@@ -8,8 +8,8 @@ const MenuPopup = ({ isOpen, menus }) => {
             className={`${
                 isOpen
                     ? 'top-20 scale-100 left-0 origin-top opacity-100'
-                    : 'left-48 opacity-0 origin-center'
-            } fixed z-50 top-20 w-screen min-h-screen border duration-300 overflow-hidden bg-[#edfcff]`}>
+                    : 'left-[25rem] sm:left-[45rem] md:left-[60rem] opacity-0 origin-left scale-x-0'
+            } fixed lg:hidden z-50 top-20 w-screen min-h-screen border duration-300 overflow-hidden bg-[#edfcff]`}>
             <ul className="text-[#25273d]">
                 {menus.map((menu, inx) => {
                     return (

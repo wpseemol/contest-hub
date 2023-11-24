@@ -8,6 +8,7 @@ export default {
             },
             colors: {
                 primaryColor: '#00c1f1',
+                fontColor: '#252737',
             },
         },
     },
