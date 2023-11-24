@@ -1,8 +1,9 @@
+import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import Container from '../Container/Container';
-import PrimaryBtn from '../PrimaryBtn/PrimaryBtn';
 import MenuIcon from '../MenuIcon/MenuIcon';
-import { useState } from 'react';
+import MenuPopup from '../MenuPopup/MenuPopup';
+import MenuBtn from '../MenuBtn/MenuBtn';
 
 const NavBar = () => {
     const [isClickMenuIcon, setIsClickMenuIcon] = useState(false);
@@ -15,9 +16,9 @@ const NavBar = () => {
         { path: '/about', menu: 'About Us' },
     ];
     return (
-        <nav className="font-montserratFont">
+        <nav className="font-montserratFont ">
             <Container>
-                <div className="flex items-center justify-between my-4">
+                <div className="flex items-center justify-between py-4 relative">
                     <Link to="/">
                         <div className="flex items-center">
                             <figure className="w-12">
@@ -26,13 +27,13 @@ const NavBar = () => {
                                     alt="logo"
                                 />
                             </figure>
-                            <span className="text-5xl text-[#49494a] font-bold">
+                            <h2 className="hidden sm:block text-5xl text-[#49494a] font-bold">
                                 <span className="text-[#787878]">ontest</span>
                                 Hub
-                            </span>
+                            </h2>
                         </div>
                     </Link>
-                    <ul className="lg:flex hidden items-center gap-4 text-lg font-semibold">
+                    <ul className="lg:flex hidden items-center gap-4 text-lg font-semibold text-[#25273d]">
                         {menus.map((menu, inx) => {
                             return (
                                 <li key={inx}>
@@ -43,18 +44,14 @@ const NavBar = () => {
                             );
                         })}
 
-                        <div className="flex items-center gap-3 ml-12">
-                            <button>Log in</button>
-                            <PrimaryBtn>
-                                <span>Get started</span>
-                            </PrimaryBtn>
-                        </div>
+                        <MenuBtn />
                     </ul>
                     <div
                         onClick={() => setIsClickMenuIcon(!isClickMenuIcon)}
                         className="lg:hidden">
                         <MenuIcon isTrue={isClickMenuIcon} />
                     </div>
+                    <MenuPopup isOpen={isClickMenuIcon} menus={menus} />
                 </div>
             </Container>
         </nav>
