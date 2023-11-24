@@ -1,5 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import HeroSection from '../../components/HeroSection/HeroSection';
+import TopContext from '../../components/TopContext/TopContext';
+import Promotion from '../../components/Propotion/Promotion';
 
 const Home = () => {
     return (
@@ -11,6 +13,16 @@ const Home = () => {
             {/* hero section */}
             <section>
                 <HeroSection />
+            </section>
+
+            {/* top context */}
+            <section>
+                <TopContext />
+            </section>
+
+            {/* ade Promotion */}
+            <section>
+                <Promotion />
             </section>
         </>
     );

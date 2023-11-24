@@ -1,7 +1,7 @@
 import Container from '../Container/Container';
 import ContestBrand from '../ContestBrand/ContestBrand';
 import HeroBg from '../HeroBg/HeroBg';
-import PrimaryBtn from '../PrimaryBtn/PrimaryBtn';
+
 import { IoSearch } from 'react-icons/io5';
 
 const HeroSection = () => {
@@ -17,7 +17,7 @@ const HeroSection = () => {
                                 Contest Creation
                             </h2>
                         </div>
-                        <div className="lg:my-8 my-4 xl:w-[50rem]">
+                        <div className="lg:my-8 my-4 xl:w-[48rem]">
                             <p className="lg:text-xl font-semibold text-lg">
                                 Choose from dozens of unique Contest created
                                 just for you Start a contest Watch how it works
@@ -27,15 +27,17 @@ const HeroSection = () => {
                             <input
                                 placeholder="Search Contest"
                                 type="text"
-                                id="searchBox"
+                                id="searchBoxId"
                                 name="searchBox"
                                 className="ml-2 h-[2.8rem] sm:w-[18rem] w-full outline-none font-medium "
                             />
-                            <PrimaryBtn>
-                                <span className="text-3xl">
+                            <button
+                                className="bg-primaryColor text-white py-2
+                             px-6 group overflow-hidden hover:bg-primaryColor/80 duration-200">
+                                <span className="text-3xl ">
                                     <IoSearch className="" />
                                 </span>
-                            </PrimaryBtn>
+                            </button>
                         </div>
                     </div>
                     <div className=" sm:w-[45rem] relative">
