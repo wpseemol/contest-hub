@@ -4,9 +4,11 @@ import Container from '../Container/Container';
 import MenuIcon from '../MenuIcon/MenuIcon';
 import MenuPopup from '../MenuPopup/MenuPopup';
 import MenuBtn from '../MenuBtn/MenuBtn';
+import useWindowPosition from '../../hook/useWindowPosition/useWindowPosition';
 
 const NavBar = () => {
     const [isClickMenuIcon, setIsClickMenuIcon] = useState(false);
+    const windowPosition = useWindowPosition();
 
     const menus = [
         { path: '/', menu: 'Home' },
@@ -16,7 +18,18 @@ const NavBar = () => {
         { path: '/about', menu: 'About Us' },
     ];
     return (
-        <nav className="font-montserratFont ">
+        <nav
+            className={`${
+                windowPosition.y < 100
+                    ? 'fixed top-0  w-full left-0 h-[5.5rem] z-50'
+                    : isClickMenuIcon
+                    ? 'fixed top-0  w-full left-0 h-[5.5rem] z-50 bg-white '
+                    : windowPosition.y > 800
+                    ? 'fixed top-0  w-full left-0 h-[5.5rem] z-50  bg-white duration-300 animate-fade-right animate-duration-[2000ms] shadow-2xl'
+                    : 'fixed top-0  w-full -left-[110rem] h-[5.5rem] z-50'
+            }
+            
+            font-montserratFont `}>
             <Container>
                 <div className="flex items-center justify-between py-4 px-8 sm:px-0 relative">
                     <Link to="/">
