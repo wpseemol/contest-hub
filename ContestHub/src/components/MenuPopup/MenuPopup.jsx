@@ -15,7 +15,17 @@ const MenuPopup = ({ isOpen, menus }) => {
                     return (
                         <li key={inx} className="m-8 font-semibold text-xl">
                             {' '}
-                            <NavLink to={menu.path}>{menu.menu}</NavLink>
+                            <NavLink
+                                to={menu.path}
+                                className={({ isActive, isPending }) =>
+                                    isActive
+                                        ? 'active'
+                                        : isPending
+                                        ? 'pending'
+                                        : 'hover:active duration-200'
+                                }>
+                                {menu.menu}
+                            </NavLink>
                         </li>
                     );
                 })}

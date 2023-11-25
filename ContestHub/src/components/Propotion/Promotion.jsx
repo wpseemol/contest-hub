@@ -1,8 +1,9 @@
+import PromotionBg from '../PromotionBg/PromotionBg';
 import Title from '../Title/Title';
 
 const Promotion = () => {
     return (
-        <div className="bg-gradient-to-b from-[#edfcff] to-white py-24 z-10 relative overflow-hidden">
+        <div className=" py-24 z-10 relative overflow-hidden">
             <div
                 className="bg-fixed bg-no-repeat bg-cover relative"
                 style={{
@@ -101,7 +102,7 @@ const Promotion = () => {
                     </div>
                 </div>
             </div>
-            <div className="text-center mx-auto w-fit mt-20">
+            <div className="text-center mx-auto w-fit mt-20 z-[4] relative mb-14">
                 <h2 className="lg:text-4xl text-3xl font-bold">
                     There is a good prize bond for each winner{' '}
                 </h2>
@@ -113,6 +114,8 @@ const Promotion = () => {
                     across various domains.
                 </p>
             </div>
+
+            <PromotionBg />
         </div>
     );
 };

@@ -6,7 +6,7 @@ const Root = () => {
     return (
         <>
             <Header />
-            <main className="font-montserratFont">
+            <main className="font-montserratFont text-[#252737] min-h-[32.5rem]">
                 <Outlet />
             </main>
             <Footer />

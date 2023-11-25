@@ -8,7 +8,7 @@ const HeroSection = () => {
     return (
         <div className="relative bg-gradient-to-b from-[#edfcff] to-white py-24 z-10 overflow-hidden">
             <Container>
-                <div className="flex lg:flex-row flex-col items-center justify-between text-fontColor text-center lg:text-left gap-6 lg:gap-0 py-16">
+                <div className="flex lg:flex-row flex-col items-center justify-evenly text-fontColor text-center lg:text-left gap-6 lg:gap-0 py-16">
                     <div>
                         <div>
                             <h2 className="lg:text-5xl sm:text-4xl text-3xl font-bold">
