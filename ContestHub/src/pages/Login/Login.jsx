@@ -2,6 +2,7 @@ import { Helmet } from 'react-helmet-async';
 import Slider from 'react-slick';
 import PrimaryBtn from '../../components/PrimaryBtn/PrimaryBtn';
 import Checkbox from '../../components/Checkbox/Checkbox';
+import { Link } from 'react-router-dom';
 
 const Login = () => {
     const googleLoginLoading = false;
@@ -20,17 +21,41 @@ const Login = () => {
     return (
         <>
             <Helmet>
-                <title>ContestHub | Login</title>
+                <title>ontestHub | Login</title>
             </Helmet>
             <div className="text-neutral-700">
                 <div className="">
-                    <div className="fixed md:w-[29rem] w-screen h-screen top-0 left-0 p-14 px-2 sm:px-14 z-20">
-                        <div className="">
+                    <div className="w-[calc(100%-29rem)] ml-auto h-20"></div>
+                    {/* this page header */}
+                    <div
+                        className="fixed top-0 right-0  z-30 md:z-10  md:w-[calc(100%-29rem)] w-screen h-20 
+                    bg-white shadow">
+                        <div className="mx-auto w-fit py-[1.1rem]">
+                            <Link to="/">
+                                <div className="flex items-center">
+                                    <figure className="w-10">
+                                        <img
+                                            src="https://i.ibb.co/VBc0Yjh/Contest-Hub-Logo.png"
+                                            alt="logo"
+                                        />
+                                    </figure>
+                                    <h2 className="hidden sm:block sm:text-4xl text-3xl text-[#49494a] font-bold">
+                                        <span className="text-[#787878]">
+                                            ontest
+                                        </span>
+                                        Hub
+                                    </h2>
+                                </div>
+                            </Link>
+                        </div>
+                    </div>
+                    <div className="md:fixed md:w-[29rem] w-screen h-screen top-0 left-0 p-14 px-4 sm:px-14 z-20 ">
+                        <div className="w-full sm:w-[21.5rem] mx-auto text-center md:text-left">
                             <h2 className="text-3xl font-semibold">
-                                Let’s get started
+                                Welcome back
                             </h2>
                             <p className="mt-4">
-                                Use your email address or Password.
+                                {`Log into your "ContestHub" account here.`}
                             </p>
                             {/* google login */}
                             <div
@@ -55,7 +80,7 @@ const Login = () => {
                                 <div className="border-b w-1/2 h-1"></div>
                             </div>
 
-                            <form>
+                            <form className="text-left">
                                 <div className="mb-4">
                                     <label
                                         htmlFor="loginEmail"
@@ -96,24 +121,24 @@ const Login = () => {
                                         <p>Forgot your password</p>
                                     </div>
                                 </div>
-                                <div className="mt-8 mb-4">
+                                <div className="mt-8 mb-4 w-fit mx-auto md:mx-0">
                                     <PrimaryBtn>
                                         <span className="uppercase">Login</span>
                                     </PrimaryBtn>
                                 </div>
                                 <div>
-                                    <p>
+                                    <p className="text-center md:text-left">
                                         Don’t have an account?{' '}
                                         <span className="text-primaryColor">
-                                            Sign Up
+                                            <Link to="/singup">Sign Up</Link>
                                         </span>
                                     </p>
                                 </div>
                             </form>
                         </div>
                     </div>
-
-                    <div className="ml-auto hidden md:block w-[calc(100%-29rem)] h-screen bg-[#f2f2f2]">
+                    {/* login and reg slider section */}
+                    <div className="ml-auto hidden md:block w-[calc(100%-29rem)] h-[calc(100vh-5rem)] bg-[#f2f2f2]">
                         <div className="flex items-center justify-center h-full">
                             <div className="w-2/3">
                                 <Slider {...settings}>

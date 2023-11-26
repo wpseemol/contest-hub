@@ -9,7 +9,7 @@ const Home = () => {
     return (
         <>
             <Helmet>
-                <title>ContestHub | Home</title>
+                <title>ontestHub | Home</title>
             </Helmet>
 
             {/* hero section */}

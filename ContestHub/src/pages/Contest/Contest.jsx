@@ -12,7 +12,7 @@ const Contest = () => {
     return (
         <>
             <Helmet>
-                <title>ContestHub | Contest</title>
+                <title>ontestHub | Contest</title>
             </Helmet>
             <div className="bg-[#f2f2f2] py-10 min-h-[32.5rem]">
                 <Container>

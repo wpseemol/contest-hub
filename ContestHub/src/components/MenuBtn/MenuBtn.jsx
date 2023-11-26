@@ -1,26 +1,37 @@
 import { Link, NavLink } from 'react-router-dom';
 import PrimaryBtn from '../PrimaryBtn/PrimaryBtn';
+import NavBarUser from '../navBarUser/navBarUser';
 
 const MenuBtn = () => {
+    const user = true;
+
     return (
         <div className="flex lg:items-center items-start lg:flex-row flex-col lg:gap-3 gap-8 lg:ml-12 mt-16 lg:mt-0">
-            <NavLink
-                to="login"
-                className={({ isActive, isPending }) =>
-                    isActive
-                        ? 'active'
-                        : isPending
-                        ? 'pending'
-                        : 'hover:active duration-200'
-                }>
-                <button>Log in</button>
-            </NavLink>
+            {user ? (
+                <>
+                    <NavBarUser />
+                </>
+            ) : (
+                <>
+                    <NavLink
+                        to="login"
+                        className={({ isActive, isPending }) =>
+                            isActive
+                                ? 'active'
+                                : isPending
+                                ? 'pending'
+                                : 'hover:active duration-200'
+                        }>
+                        <button>Log in</button>
+                    </NavLink>
 
-            <Link to="signup">
-                <PrimaryBtn>
-                    <span>Get started</span>
-                </PrimaryBtn>
-            </Link>
+                    <Link to="signup">
+                        <PrimaryBtn>
+                            <span>Get started</span>
+                        </PrimaryBtn>
+                    </Link>
+                </>
+            )}
         </div>
     );
 };
