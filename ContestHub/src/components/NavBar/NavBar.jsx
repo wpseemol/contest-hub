@@ -22,7 +22,7 @@ const NavBar = () => {
             <nav
                 className={`${
                     windowPosition.y < 100
-                        ? 'fixed top-0  w-full left-0 h-[5rem] z-50 bg-[#edfcff]'
+                        ? 'fixed top-0  w-full left-0 h-[5rem] z-50 bg-[#edfcff] border'
                         : isClickMenuIcon
                         ? 'fixed top-0  w-full left-0 h-[5rem] z-50 bg-[#edfcff] '
                         : windowPosition.y > 700

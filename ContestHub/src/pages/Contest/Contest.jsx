@@ -4,10 +4,16 @@ import { GrNext } from 'react-icons/gr';
 import 'react-tabs/style/react-tabs.css';
 import { Tab, TabList, TabPanel, Tabs } from 'react-tabs';
 import ContestCard from '../../components/ContestCard/ContestCard';
+import ContestCardHeader from '../../components/ContestCardHeader/ContestCardHeader';
+import ContestCardContainer from '../../components/ContestCardContainer/ContestCardContainer';
+import { Helmet } from 'react-helmet-async';
 
 const Contest = () => {
     return (
         <>
+            <Helmet>
+                <title>ContestHub | Contest</title>
+            </Helmet>
             <div className="bg-[#f2f2f2] py-10 min-h-[32.5rem]">
                 <Container>
                     {/* Breadcrumb */}
@@ -26,49 +32,19 @@ const Contest = () => {
                             </TabList>
 
                             <TabPanel>
-                                <div className="bg-white rounded-xl p-6 w-fit mx-20">
-                                    <div className="flex items-center gap-10 justify-center border-b pb-2 text-xl font-semibold">
-                                        <div className="w-3/5">
-                                            <h2>Contest info</h2>
-                                        </div>
-                                        <div className="flex items-center justify-evenly w-2/5">
-                                            <div className=" mx-auto">
-                                                <h2>Entries</h2>
-                                            </div>
-                                            <div className=" mx-auto">
-                                                <h2>Package</h2>
-                                            </div>
-                                            <div className=" mx-auto">
-                                                <h2>More details</h2>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <ContestCardContainer>
+                                    <ContestCardHeader />
                                     <ContestCard />
                                     <ContestCard />
                                     <ContestCard />
-                                </div>
+                                </ContestCardContainer>
                             </TabPanel>
                             <TabPanel>
-                                <div className="bg-white rounded-xl p-6 w-fit mx-20">
-                                    <div className="flex items-center gap-10 justify-center border-b pb-2 text-xl font-semibold">
-                                        <div className="w-3/5">
-                                            <h2>Contest info</h2>
-                                        </div>
-                                        <div className="flex items-center justify-evenly w-2/5">
-                                            <div className=" mx-auto">
-                                                <h2>Entries</h2>
-                                            </div>
-                                            <div className=" mx-auto">
-                                                <h2>Package</h2>
-                                            </div>
-                                            <div className=" mx-auto">
-                                                <h2>More details</h2>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <ContestCardContainer>
+                                    <ContestCardHeader />
                                     <ContestCard />
                                     <ContestCard />
-                                </div>
+                                </ContestCardContainer>
                             </TabPanel>
                         </Tabs>
                     </div>
