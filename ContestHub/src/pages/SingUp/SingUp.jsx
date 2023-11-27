@@ -2,11 +2,48 @@ import { Helmet } from 'react-helmet-async';
 import Slider from 'react-slick';
 import PrimaryBtn from '../../components/PrimaryBtn/PrimaryBtn';
 import Checkbox from '../../components/Checkbox/Checkbox';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import useAuthProvider from '../../hook/useAuthProvider/useAuthProvider';
+import { ImSpinner9 } from 'react-icons/im';
+import Swal from 'sweetalert2';
 
 const SingUp = () => {
-    const googleLoginLoading = false;
+    //singUp use email password fun
+    const { register, handleSubmit, reset } = useForm();
+    const { singUp, loading, userInformationSet, logOut } = useAuthProvider();
 
+    const navigate = useNavigate();
+
+    const handelSingUp = (data) => {
+        singUp(data.singUpEmail, data.singUpPassword).then(() => {
+            userInformationSet(data.fullName, data.profilePicture).then(() => {
+                logOut()
+                    .then(() => {
+                        Swal.fire({
+                            title: 'Successful!',
+                            text: 'Signed up Successful',
+                            icon: 'success',
+                            confirmButtonText: 'Okay',
+                        }).then(() => {
+                            logOut();
+                            navigate('/login');
+                            reset();
+                        });
+                    })
+                    .catch((error) => {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: error,
+                            icon: 'error',
+                            confirmButtonText: 'Okay',
+                        });
+                    });
+            });
+        });
+    };
+
+    //slider settings
     const settings = {
         fade: true,
         infinite: true,
@@ -55,7 +92,7 @@ const SingUp = () => {
                                 Let’s get started
                             </h2>
                             <p className="mt-4">
-                                Use your email address or Facebook account.
+                                Created account Use your email address.
                             </p>
 
                             <div className="flex items-center gap-2 my-6">
@@ -64,7 +101,9 @@ const SingUp = () => {
                                 <div className="border-b w-1/2 h-1"></div>
                             </div>
 
-                            <form className="text-left">
+                            <form
+                                onSubmit={handleSubmit(handelSingUp)}
+                                className="text-left">
                                 <div className="mb-4">
                                     <label
                                         htmlFor="fullName"
@@ -75,9 +114,9 @@ const SingUp = () => {
                                     <input
                                         className=" outline-primaryColor/60 border py-3 rounded text-lg pl-4 w-full mt-1"
                                         type="text"
-                                        name="fullName"
+                                        {...register('fullName')}
                                         id="fullNameId"
-                                        placeholder="johndoe@gmail.com"
+                                        placeholder="Johndoe Ahamad"
                                         required
                                     />
                                 </div>
@@ -91,9 +130,9 @@ const SingUp = () => {
                                     <input
                                         className=" outline-primaryColor/60 border py-3 rounded text-lg pl-4 w-full mt-1"
                                         type="text"
-                                        name="profilePicture"
+                                        {...register('profilePicture')}
                                         id="profilePictureId"
-                                        placeholder="johndoe@gmail.com"
+                                        placeholder="https://photo.smoethis.png"
                                         required
                                     />
                                 </div>
@@ -107,8 +146,8 @@ const SingUp = () => {
                                     <input
                                         className=" outline-primaryColor/60 border py-3 rounded text-lg pl-4 w-full mt-1"
                                         type="email"
-                                        name="loginEmail"
-                                        id="emailId"
+                                        {...register('singUpEmail')}
+                                        id="singUpEmail"
                                         placeholder="johndoe@gmail.com"
                                         required
                                     />
@@ -123,8 +162,8 @@ const SingUp = () => {
                                     <input
                                         className=" outline-primaryColor/60 border py-3 rounded text-lg pl-4 w-full mt-1"
                                         type="password"
-                                        name="loginPassword"
-                                        id="passwordId"
+                                        {...register('singUpPassword')}
+                                        id="singUpPassword"
                                         placeholder="Please enter your password"
                                         required
                                     />
@@ -139,7 +178,13 @@ const SingUp = () => {
                                 </div>
                                 <div className="mt-8 mb-4 w-fit mx-auto md:mx-0">
                                     <PrimaryBtn>
-                                        <span className="uppercase">Login</span>
+                                        <span className="uppercase">
+                                            {loading ? (
+                                                <ImSpinner9 className="animate-spin text-2xl" />
+                                            ) : (
+                                                'SingUp'
+                                            )}
+                                        </span>
                                     </PrimaryBtn>
                                 </div>
                                 <div>

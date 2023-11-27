@@ -5,11 +5,14 @@ import Contest from '../pages/Contest/Contest';
 import Login from '../pages/Login/Login';
 import SingUp from '../pages/SingUp/SingUp';
 import Dashboard from '../pages/Dashboard/Dashboard';
+import Error from '../pages/error/error';
+import PrivetRoute from '../privetRoute/PrivetRoute';
 
 const router = createBrowserRouter([
     {
         path: '/',
         element: <Root />,
+        errorElement: <Error />,
         children: [
             {
                 path: '/',
@@ -31,7 +34,11 @@ const router = createBrowserRouter([
     },
     {
         path: 'dashboard',
-        element: <Dashboard />,
+        element: (
+            <PrivetRoute>
+                <Dashboard />
+            </PrivetRoute>
+        ),
     },
 ]);
 

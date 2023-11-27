@@ -1,20 +1,26 @@
 import { Link, NavLink } from 'react-router-dom';
 import PrimaryBtn from '../PrimaryBtn/PrimaryBtn';
 import NavBarUser from '../navBarUser/navBarUser';
+import useAuthProvider from '../../hook/useAuthProvider/useAuthProvider';
+import { ImSpinner9 } from 'react-icons/im';
 
 const MenuBtn = () => {
-    const user = true;
+    const { user, loading, logOut } = useAuthProvider();
 
     return (
         <div className="flex lg:items-center items-start lg:flex-row flex-col lg:gap-3 gap-8 lg:ml-12 mt-16 lg:mt-0">
-            {user ? (
+            {loading ? (
+                <span className="px-10">
+                    <ImSpinner9 className="animate-spin text-2xl" />
+                </span>
+            ) : user ? (
                 <>
-                    <NavBarUser />
+                    <NavBarUser user={!loading ? user : {}} logOut={logOut} />
                 </>
             ) : (
                 <>
                     <NavLink
-                        to="login"
+                        to="/login"
                         className={({ isActive, isPending }) =>
                             isActive
                                 ? 'active'
@@ -25,7 +31,7 @@ const MenuBtn = () => {
                         <button>Log in</button>
                     </NavLink>
 
-                    <Link to="signup">
+                    <Link to="/singup">
                         <PrimaryBtn>
                             <span>Get started</span>
                         </PrimaryBtn>

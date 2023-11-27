@@ -12,7 +12,7 @@ const NavBar = () => {
 
     const menus = [
         { path: '/', menu: 'Home' },
-        { path: 'contest', menu: 'Contest' },
+        { path: '/contest', menu: 'Contest' },
         { path: '/blog', menu: 'Blog' },
         { path: '/contact', menu: 'Contact' },
         { path: '/about', menu: 'About Us' },

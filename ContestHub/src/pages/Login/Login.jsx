@@ -2,11 +2,85 @@ import { Helmet } from 'react-helmet-async';
 import Slider from 'react-slick';
 import PrimaryBtn from '../../components/PrimaryBtn/PrimaryBtn';
 import Checkbox from '../../components/Checkbox/Checkbox';
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import useAuthProvider from '../../hook/useAuthProvider/useAuthProvider';
+import { ImSpinner9 } from 'react-icons/im';
+import Swal from 'sweetalert2';
 
 const Login = () => {
-    const googleLoginLoading = false;
+    const location = useLocation();
+    const navigate = useNavigate();
 
+    const [googleLoginLoading, setGoogleLoginLoading] = useState(false);
+
+    const { loading, singIn, logInGoogle } = useAuthProvider();
+
+    //login use email password fun
+    const { register, handleSubmit, reset } = useForm();
+
+    const handelLogin = (data) => {
+        singIn(data.loginEmail, data.loginPassword)
+            .then(() => {
+                Swal.fire({
+                    title: 'Successful',
+                    text: 'Log in Successful',
+                    icon: 'success',
+                    confirmButtonText: 'Okay',
+                });
+
+                // get access token
+                // axiosBasUrl.post('/jwt', { email }).then(() => {});
+
+                location?.state
+                    ? navigate(location?.state?.from)
+                    : navigate('/');
+                reset();
+            })
+            .catch((error) => {
+                Swal.fire({
+                    title: 'Error!',
+                    text: error,
+                    icon: 'error',
+                    confirmButtonText: 'Okay',
+                });
+            });
+    };
+
+    const handelGoogleLogin = () => {
+        setGoogleLoginLoading(true);
+
+        logInGoogle()
+            .then(() => {
+                Swal.fire({
+                    title: 'Successful',
+                    text: 'Log in Successful',
+                    icon: 'success',
+                    confirmButtonText: 'Okay',
+                });
+
+                //const email = result?.user?.email;
+                // jwt token set
+                //axiosBasUrl.post('/jwt', { email }).then(() => {});
+                setGoogleLoginLoading(false);
+                location?.state
+                    ? navigate(location?.state?.from)
+                    : navigate('/');
+            })
+            .catch((error) => {
+                setGoogleLoginLoading(false);
+
+                Swal.fire({
+                    title: 'Error!',
+                    text: error,
+                    icon: 'error',
+                    confirmButtonText: 'Okay',
+                });
+            });
+    };
+
+    //slider settings
     const settings = {
         fade: true,
         infinite: true,
@@ -59,7 +133,7 @@ const Login = () => {
                             </p>
                             {/* google login */}
                             <div
-                                // onClick={handelGoogleLogin}
+                                onClick={handelGoogleLogin}
                                 className="flex my-4 justify-center gap-5 w-full py-2 rounded-full border border-black/30 hover:bg-primaryColor/80 hover:text-white duration-200">
                                 <figure>
                                     <img
@@ -68,9 +142,11 @@ const Login = () => {
                                     />
                                 </figure>
                                 <span>
-                                    {googleLoginLoading
-                                        ? 'Loading...'
-                                        : 'Sing in with Google'}
+                                    {googleLoginLoading ? (
+                                        <ImSpinner9 className="animate-spin text-2xl" />
+                                    ) : (
+                                        'Sing in with Google'
+                                    )}
                                 </span>
                             </div>
 
@@ -80,7 +156,9 @@ const Login = () => {
                                 <div className="border-b w-1/2 h-1"></div>
                             </div>
 
-                            <form className="text-left">
+                            <form
+                                onSubmit={handleSubmit(handelLogin)}
+                                className="text-left">
                                 <div className="mb-4">
                                     <label
                                         htmlFor="loginEmail"
@@ -91,7 +169,7 @@ const Login = () => {
                                     <input
                                         className=" outline-primaryColor/60 border py-3 rounded text-lg pl-4 w-full mt-1"
                                         type="email"
-                                        name="loginEmail"
+                                        {...register('loginEmail')}
                                         id="emailId"
                                         placeholder="johndoe@gmail.com"
                                         required
@@ -107,7 +185,7 @@ const Login = () => {
                                     <input
                                         className=" outline-primaryColor/60 border py-3 rounded text-lg pl-4 w-full mt-1"
                                         type="password"
-                                        name="loginPassword"
+                                        {...register('loginPassword')}
                                         id="passwordId"
                                         placeholder="Please enter your password"
                                         required
@@ -123,7 +201,13 @@ const Login = () => {
                                 </div>
                                 <div className="mt-8 mb-4 w-fit mx-auto md:mx-0">
                                     <PrimaryBtn>
-                                        <span className="uppercase">Login</span>
+                                        <span className="uppercase">
+                                            {loading ? (
+                                                <ImSpinner9 className="animate-spin text-2xl" />
+                                            ) : (
+                                                'Login'
+                                            )}
+                                        </span>
                                     </PrimaryBtn>
                                 </div>
                                 <div>
