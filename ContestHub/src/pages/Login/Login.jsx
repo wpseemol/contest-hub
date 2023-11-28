@@ -8,14 +8,20 @@ import { useForm } from 'react-hook-form';
 import useAuthProvider from '../../hook/useAuthProvider/useAuthProvider';
 import { ImSpinner9 } from 'react-icons/im';
 import Swal from 'sweetalert2';
+import useAxiosPublic from '../../hook/useAxiosPublic/useAxiosPublic';
 
 const Login = () => {
     const location = useLocation();
     const navigate = useNavigate();
 
     const [googleLoginLoading, setGoogleLoginLoading] = useState(false);
+    const [loading, setLoading] = useState(false);
 
-    const { loading, singIn, logInGoogle } = useAuthProvider();
+    const [nextLogin, setNextLogin] = useState(false);
+
+    const { singIn, logInGoogle, user } = useAuthProvider();
+
+    const publicBaseUrl = useAxiosPublic();
 
     //login use email password fun
     const {
@@ -26,52 +32,100 @@ const Login = () => {
     } = useForm();
 
     const handelLogin = (data) => {
-        singIn(data.loginEmail, data.loginPassword)
-            .then(() => {
-                Swal.fire({
-                    title: 'Successful',
-                    text: 'Log in Successful',
-                    icon: 'success',
-                    confirmButtonText: 'Okay',
-                });
+        setLoading(true);
+        if (!nextLogin) {
+            singIn(data.loginEmail, data.loginPassword)
+                .then(() => {
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Log in Successful',
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
+                    setLoading(false);
 
-                // get access token
-                // axiosBasUrl.post('/jwt', { email }).then(() => {});
+                    // jwt token set
+                    const email = data.loginEmail;
+                    publicBaseUrl.post('/jwt', { email }).then(() => {});
 
-                location?.state
-                    ? navigate(location?.state?.from)
-                    : navigate('/');
-                reset();
-            })
-            .catch((error) => {
-                Swal.fire({
-                    title: 'Error!',
-                    text: error,
-                    icon: 'error',
-                    confirmButtonText: 'Okay',
+                    location?.state
+                        ? navigate(location?.state?.from)
+                        : navigate('/');
+                    reset();
+                })
+                .catch((error) => {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: error,
+                        icon: 'error',
+                        confirmButtonText: 'Okay',
+                    });
                 });
-            });
+        }
+
+        if (nextLogin) {
+            publicBaseUrl
+                .put('/users', {
+                    uEmail: user?.email,
+                    role: data?.userType,
+                })
+                .then(() => {
+                    Swal.fire({
+                        position: 'top-end',
+                        icon: 'success',
+                        title: 'Log in Successful',
+                        showConfirmButton: false,
+                        timer: 1500,
+                    });
+                    location?.state
+                        ? navigate(location?.state?.from)
+                        : navigate('/');
+                    setLoading(false);
+                    setGoogleLoginLoading(false);
+                });
+        }
     };
 
     const handelGoogleLogin = () => {
         setGoogleLoginLoading(true);
 
         logInGoogle()
-            .then(() => {
-                Swal.fire({
-                    title: 'Successful',
-                    text: 'Log in Successful',
-                    icon: 'success',
-                    confirmButtonText: 'Okay',
-                });
+            .then((userCredential) => {
+                setNextLogin(true);
 
-                //const email = result?.user?.email;
                 // jwt token set
-                //axiosBasUrl.post('/jwt', { email }).then(() => {});
+                const email = userCredential.user?.email;
+                publicBaseUrl.post('/jwt', { email }).then(() => {});
+
+                publicBaseUrl
+                    .post('/users', {
+                        uEmail: userCredential.user?.email,
+                        uName: userCredential.user?.displayName,
+                        uPhoto: userCredential.user?.photoURL,
+                        role: 'user',
+                    })
+                    .then(() => {
+                        setNextLogin(true);
+                    })
+                    .catch(() => {
+                        setNextLogin(false);
+
+                        Swal.fire({
+                            position: 'top-end',
+                            icon: 'success',
+                            title: 'Log in Successful',
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+
+                        location?.state
+                            ? navigate(location?.state?.from)
+                            : navigate('/');
+                        setLoading(false);
+                    });
+
                 setGoogleLoginLoading(false);
-                location?.state
-                    ? navigate(location?.state?.from)
-                    : navigate('/');
             })
             .catch((error) => {
                 setGoogleLoginLoading(false);
@@ -137,23 +191,25 @@ const Login = () => {
                                 {`Log into your "ContestHub" account here.`}
                             </p>
                             {/* google login */}
-                            <div
-                                onClick={handelGoogleLogin}
-                                className="flex my-4 justify-center gap-5 w-full py-2 rounded-full border border-black/30 hover:bg-primaryColor/80 hover:text-white duration-200">
-                                <figure>
-                                    <img
-                                        src="https://i.ibb.co/QN1hrN9/icons8-google-24.png"
-                                        alt="icon"
-                                    />
-                                </figure>
-                                <span>
-                                    {googleLoginLoading ? (
-                                        <ImSpinner9 className="animate-spin text-2xl" />
-                                    ) : (
-                                        'Sing in with Google'
-                                    )}
-                                </span>
-                            </div>
+                            {!nextLogin && (
+                                <div
+                                    onClick={handelGoogleLogin}
+                                    className="flex my-4 justify-center gap-5 w-full py-2 rounded-full border border-black/30 hover:bg-primaryColor/80 hover:text-white duration-200">
+                                    <figure>
+                                        <img
+                                            src="https://i.ibb.co/QN1hrN9/icons8-google-24.png"
+                                            alt="icon"
+                                        />
+                                    </figure>
+                                    <span>
+                                        {googleLoginLoading ? (
+                                            <ImSpinner9 className="animate-spin text-2xl" />
+                                        ) : (
+                                            'Sing in with Google'
+                                        )}
+                                    </span>
+                                </div>
+                            )}
 
                             <div className="flex items-center gap-2">
                                 <div className="border-b w-1/2 h-1"></div>
@@ -164,68 +220,114 @@ const Login = () => {
                             <form
                                 onSubmit={handleSubmit(handelLogin)}
                                 className="text-left">
-                                <div className="mb-4">
-                                    <label
-                                        htmlFor="loginEmail"
-                                        className="text-base font-semibold">
-                                        Email Address
-                                    </label>
-                                    <br className="my-2" />
-                                    <input
-                                        className=" outline-primaryColor/60 border py-3 rounded text-lg pl-4 w-full mt-1"
-                                        type="email"
-                                        {...register('loginEmail')}
-                                        id="emailId"
-                                        placeholder="johndoe@gmail.com"
-                                        required
-                                    />
-                                </div>
-                                <div className="mb-4">
-                                    <label
-                                        htmlFor="loginPassword"
-                                        className="text-base font-semibold">
-                                        Password
-                                    </label>
-                                    <br />
-                                    <input
-                                        className=" outline-primaryColor/60 border py-3 rounded text-lg pl-4 w-full mt-1"
-                                        type="password"
-                                        {...register('loginPassword', {
-                                            minLength: 6,
-                                            pattern:
-                                                /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-])/,
-                                        })}
-                                        id="passwordId"
-                                        placeholder="Please enter your password"
-                                        required
-                                    />
-                                    {errors?.loginPassword?.type ===
-                                        'minLength' && (
-                                        <span className="text-red-600">
-                                            Password must be 6 characters
-                                        </span>
-                                    )}
-                                    {errors?.loginPassword?.type ===
-                                        'pattern' && (
-                                        <span className="text-red-600">
-                                            Password must be one capital letter
-                                            or special character.
-                                        </span>
-                                    )}
-                                </div>
-                                <div className="flex items-center justify-between mb-3 relative">
-                                    <div>
-                                        <Checkbox />
-                                    </div>
-                                    <div className="text-primaryColor text-base ">
-                                        <p>Forgot your password</p>
-                                    </div>
-                                </div>
+                                {!nextLogin ? (
+                                    <>
+                                        <div className="mb-4">
+                                            <label
+                                                htmlFor="loginEmail"
+                                                className="text-base font-semibold">
+                                                Email Address
+                                            </label>
+                                            <br className="my-2" />
+                                            <input
+                                                className=" outline-primaryColor/60 border py-3 rounded text-lg pl-4 w-full mt-1"
+                                                type="email"
+                                                {...register('loginEmail')}
+                                                id="emailId"
+                                                placeholder="johndoe@gmail.com"
+                                                required
+                                            />
+                                        </div>
+                                        <div className="mb-4">
+                                            <label
+                                                htmlFor="loginPassword"
+                                                className="text-base font-semibold">
+                                                Password
+                                            </label>
+                                            <br />
+                                            <input
+                                                className=" outline-primaryColor/60 border py-3 rounded text-lg pl-4 w-full mt-1"
+                                                type="password"
+                                                {...register('loginPassword', {
+                                                    minLength: 6,
+                                                    pattern:
+                                                        /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-])/,
+                                                })}
+                                                id="passwordId"
+                                                placeholder="Please enter your password"
+                                                required
+                                            />
+                                            {errors?.loginPassword?.type ===
+                                                'minLength' && (
+                                                <span className="text-red-600">
+                                                    Password must be 6
+                                                    characters
+                                                </span>
+                                            )}
+                                            {errors?.loginPassword?.type ===
+                                                'pattern' && (
+                                                <span className="text-red-600">
+                                                    Password must be one capital
+                                                    letter or special character.
+                                                </span>
+                                            )}
+                                        </div>
+                                        <div className="flex items-center justify-between mb-3 relative">
+                                            <div>
+                                                <Checkbox />
+                                            </div>
+                                            <div className="text-primaryColor text-base ">
+                                                <p>Forgot your password</p>
+                                            </div>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <>
+                                        <p className="my-5">
+                                            What kind of user do you want to be
+                                            here?
+                                        </p>
+                                        <div>
+                                            <input
+                                                type="radio"
+                                                {...register('userType')}
+                                                value="user"
+                                                id="simpleUser"
+                                                required
+                                            />
+                                            <label
+                                                htmlFor="userType"
+                                                className="text-base font-semibold">
+                                                <span> User</span>
+                                            </label>
+                                        </div>
+
+                                        <br />
+
+                                        <div>
+                                            <input
+                                                type="radio"
+                                                {...register('userType')}
+                                                value="contest-creator"
+                                                id="contest-Creator"
+                                                required
+                                            />
+                                            <label
+                                                htmlFor="userType"
+                                                className="text-base font-semibold">
+                                                <span> Contest Creator</span>
+                                            </label>
+                                        </div>
+                                    </>
+                                )}
+
                                 <div className="mt-8 mb-4 w-fit mx-auto md:mx-0">
                                     <PrimaryBtn>
                                         <span className="uppercase">
                                             {loading ? (
                                                 <ImSpinner9 className="animate-spin text-2xl" />
+                                            ) : nextLogin ? (
+                                                'Register'
                                             ) : (
                                                 'Login'
                                             )}

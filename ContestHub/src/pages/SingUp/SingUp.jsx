@@ -38,31 +38,45 @@ const SingUp = () => {
         if (nextSingUp) {
             setLoading(true);
 
-            singUp(data.singUpEmail, data.singUpPassword)
-                .then((userCredential) => {
-                    userInformationSet(data.fullName, data.profilePicture).then(
-                        () => {
-                            publicBaseUrl.post('/users', {
-                                uEmail: data.singUpEmail,
-                                uid: userCredential.user.uid,
-                                role: data?.userType,
-                            });
-
-                            logOut().then(() => {
-                                Swal.fire({
-                                    title: 'Successful!',
-                                    text: 'Signed up Successful',
-                                    icon: 'success',
-                                    confirmButtonText: 'Okay',
-                                }).then(() => {
+            publicBaseUrl
+                .post('/users', {
+                    uEmail: data.singUpEmail,
+                    uName: data.fullName,
+                    uPhoto: data.profilePicture,
+                    role: data?.userType,
+                })
+                .then(() => {
+                    singUp(data.singUpEmail, data.singUpPassword)
+                        .then(() => {
+                            userInformationSet(
+                                data.fullName,
+                                data.profilePicture
+                            ).then(() => {
+                                logOut().then(() => {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        position: 'top-end',
+                                        title: 'Sign up Successful',
+                                        showConfirmButton: false,
+                                        timer: 1500,
+                                    });
                                     logOut();
                                     navigate('/login');
                                     reset();
                                     setLoading(false);
                                 });
                             });
-                        }
-                    );
+                        })
+                        .catch((error) => {
+                            Swal.fire({
+                                title: 'Error!',
+                                text: error,
+                                icon: 'error',
+                                confirmButtonText: 'Okay',
+                            }).then(() => {
+                                setLoading(false);
+                            });
+                        });
                 })
                 .catch((error) => {
                     Swal.fire({

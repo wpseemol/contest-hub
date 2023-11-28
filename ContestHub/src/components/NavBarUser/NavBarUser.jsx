@@ -10,13 +10,17 @@ import { BsDatabaseDash } from 'react-icons/bs';
 import { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import useAxiosPublic from '../../hook/useAxiosPublic/useAxiosPublic';
 
 const NavBarUser = ({ user, logOut }) => {
     const [showUserDetails, setShowUserDetails] = useState(false);
 
     const nameForNavbar = user.displayName?.split(' ')[0] || null;
 
+    const publicBaseUrl = useAxiosPublic();
     const handelLogout = () => {
+        publicBaseUrl.post('/logout').then(() => {});
+
         logOut()
             .then(() => {
                 Swal.fire({

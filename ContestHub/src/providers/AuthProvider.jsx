@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import {
     GoogleAuthProvider,
     createUserWithEmailAndPassword,
+    deleteUser,
     onAuthStateChanged,
     signInWithEmailAndPassword,
     signInWithPopup,
@@ -62,6 +63,12 @@ const AuthProvider = ({ children }) => {
         return signOut(auth);
     };
 
+    // delete user account
+    const deleteAccount = () => {
+        SetLoading(true);
+        return deleteUser(auth.currentUser);
+    };
+
     const loginAndRegInfo = {
         user,
         singUp,
@@ -70,6 +77,7 @@ const AuthProvider = ({ children }) => {
         loading,
         logInGoogle,
         userInformationSet,
+        deleteAccount,
     };
     return (
         <AuthContext.Provider value={loginAndRegInfo}>

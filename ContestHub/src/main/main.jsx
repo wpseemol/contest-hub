@@ -6,7 +6,13 @@ import { ToastContainer } from 'react-toastify';
 
 import router from '../router/router';
 import AuthProvider from '../providers/AuthProvider';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import {
+    useQuery,
+    useMutation,
+    useQueryClient,
+    QueryClient,
+    QueryClientProvider,
+} from '@tanstack/react-query';
 
 import '../main/index.css';
 import 'react-toastify/dist/ReactToastify.css';

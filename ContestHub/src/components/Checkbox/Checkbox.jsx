@@ -12,7 +12,6 @@ const Checkbox = () => {
                     name="remember"
                     onChange={() => setChecked(!checked)}
                     id="id-c01"
-                    required
                 />
 
                 <label htmlFor="remember" className="text-base ml-1">
