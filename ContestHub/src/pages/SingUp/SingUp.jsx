@@ -7,40 +7,74 @@ import { useForm } from 'react-hook-form';
 import useAuthProvider from '../../hook/useAuthProvider/useAuthProvider';
 import { ImSpinner9 } from 'react-icons/im';
 import Swal from 'sweetalert2';
+import useAxiosPublic from '../../hook/useAxiosPublic/useAxiosPublic';
+import { useState } from 'react';
 
 const SingUp = () => {
     //singUp use email password fun
-    const { register, handleSubmit, reset } = useForm();
-    const { singUp, loading, userInformationSet, logOut } = useAuthProvider();
+
+    const [nextSingUp, setNextSingUp] = useState(false);
+    const [loading, setLoading] = useState(false);
+
+    const publicBaseUrl = useAxiosPublic();
+
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors },
+    } = useForm();
+    const { singUp, userInformationSet, logOut } = useAuthProvider();
 
     const navigate = useNavigate();
 
     const handelSingUp = (data) => {
-        singUp(data.singUpEmail, data.singUpPassword).then(() => {
-            userInformationSet(data.fullName, data.profilePicture).then(() => {
-                logOut()
-                    .then(() => {
-                        Swal.fire({
-                            title: 'Successful!',
-                            text: 'Signed up Successful',
-                            icon: 'success',
-                            confirmButtonText: 'Okay',
-                        }).then(() => {
-                            logOut();
-                            navigate('/login');
-                            reset();
-                        });
-                    })
-                    .catch((error) => {
-                        Swal.fire({
-                            title: 'Error!',
-                            text: error,
-                            icon: 'error',
-                            confirmButtonText: 'Okay',
-                        });
+        setLoading(true);
+        if (!nextSingUp) {
+            setNextSingUp(true);
+            setLoading(false);
+        }
+
+        if (nextSingUp) {
+            setLoading(true);
+
+            singUp(data.singUpEmail, data.singUpPassword)
+                .then((userCredential) => {
+                    userInformationSet(data.fullName, data.profilePicture).then(
+                        () => {
+                            publicBaseUrl.post('/users', {
+                                uEmail: data.singUpEmail,
+                                uid: userCredential.user.uid,
+                                role: data?.userType,
+                            });
+
+                            logOut().then(() => {
+                                Swal.fire({
+                                    title: 'Successful!',
+                                    text: 'Signed up Successful',
+                                    icon: 'success',
+                                    confirmButtonText: 'Okay',
+                                }).then(() => {
+                                    logOut();
+                                    navigate('/login');
+                                    reset();
+                                    setLoading(false);
+                                });
+                            });
+                        }
+                    );
+                })
+                .catch((error) => {
+                    Swal.fire({
+                        title: 'Error!',
+                        text: error,
+                        icon: 'error',
+                        confirmButtonText: 'Okay',
+                    }).then(() => {
+                        setLoading(false);
                     });
-            });
-        });
+                });
+        }
     };
 
     //slider settings
@@ -104,83 +138,146 @@ const SingUp = () => {
                             <form
                                 onSubmit={handleSubmit(handelSingUp)}
                                 className="text-left">
-                                <div className="mb-4">
-                                    <label
-                                        htmlFor="fullName"
-                                        className="text-base font-semibold">
-                                        Full Name
-                                    </label>
-                                    <br className="my-2" />
-                                    <input
-                                        className=" outline-primaryColor/60 border py-3 rounded text-lg pl-4 w-full mt-1"
-                                        type="text"
-                                        {...register('fullName')}
-                                        id="fullNameId"
-                                        placeholder="Johndoe Ahamad"
-                                        required
-                                    />
-                                </div>
-                                <div className="mb-4">
-                                    <label
-                                        htmlFor="profilePicture"
-                                        className="text-base font-semibold">
-                                        Profile Picture
-                                    </label>
-                                    <br className="my-2" />
-                                    <input
-                                        className=" outline-primaryColor/60 border py-3 rounded text-lg pl-4 w-full mt-1"
-                                        type="text"
-                                        {...register('profilePicture')}
-                                        id="profilePictureId"
-                                        placeholder="https://photo.smoethis.png"
-                                        required
-                                    />
-                                </div>
-                                <div className="mb-4">
-                                    <label
-                                        htmlFor="loginEmail"
-                                        className="text-base font-semibold">
-                                        Email Address
-                                    </label>
-                                    <br className="my-2" />
-                                    <input
-                                        className=" outline-primaryColor/60 border py-3 rounded text-lg pl-4 w-full mt-1"
-                                        type="email"
-                                        {...register('singUpEmail')}
-                                        id="singUpEmail"
-                                        placeholder="johndoe@gmail.com"
-                                        required
-                                    />
-                                </div>
-                                <div className="mb-4">
-                                    <label
-                                        htmlFor="loginPassword"
-                                        className="text-base font-semibold">
-                                        Password
-                                    </label>
-                                    <br />
-                                    <input
-                                        className=" outline-primaryColor/60 border py-3 rounded text-lg pl-4 w-full mt-1"
-                                        type="password"
-                                        {...register('singUpPassword')}
-                                        id="singUpPassword"
-                                        placeholder="Please enter your password"
-                                        required
-                                    />
-                                </div>
-                                <div className="flex items-center justify-between mb-3 relative">
-                                    <div>
-                                        <Checkbox />
-                                    </div>
-                                    <div className="text-primaryColor text-base ">
-                                        <p>Forgot your password</p>
-                                    </div>
-                                </div>
+                                {!nextSingUp ? (
+                                    <>
+                                        <div className="mb-4">
+                                            <label
+                                                htmlFor="fullName"
+                                                className="text-base font-semibold">
+                                                Full Name
+                                            </label>
+                                            <br className="my-2" />
+                                            <input
+                                                className=" outline-primaryColor/60 border py-3 rounded text-lg pl-4 w-full mt-1"
+                                                type="text"
+                                                {...register('fullName')}
+                                                id="fullNameId"
+                                                placeholder="Johndoe Ahamad"
+                                                required
+                                            />
+                                        </div>
+                                        <div className="mb-4">
+                                            <label
+                                                htmlFor="profilePicture"
+                                                className="text-base font-semibold">
+                                                Profile Picture
+                                            </label>
+                                            <br className="my-2" />
+                                            <input
+                                                className=" outline-primaryColor/60 border py-3 rounded text-lg pl-4 w-full mt-1"
+                                                type="text"
+                                                {...register('profilePicture')}
+                                                id="profilePictureId"
+                                                placeholder="https://photo.smoethis.png"
+                                                required
+                                            />
+                                        </div>
+                                        <div className="mb-4">
+                                            <label
+                                                htmlFor="loginEmail"
+                                                className="text-base font-semibold">
+                                                Email Address
+                                            </label>
+                                            <br className="my-2" />
+                                            <input
+                                                className=" outline-primaryColor/60 border py-3 rounded text-lg pl-4 w-full mt-1"
+                                                type="email"
+                                                {...register('singUpEmail')}
+                                                id="singUpEmail"
+                                                placeholder="johndoe@gmail.com"
+                                                required
+                                            />
+                                        </div>
+                                        <div className="mb-4">
+                                            <label
+                                                htmlFor="loginPassword"
+                                                className="text-base font-semibold">
+                                                Password
+                                            </label>
+                                            <br />
+                                            <input
+                                                className=" outline-primaryColor/60 border py-3 rounded text-lg pl-4 w-full mt-1"
+                                                type="password"
+                                                {...register('singUpPassword', {
+                                                    minLength: 6,
+                                                    pattern:
+                                                        /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-])/,
+                                                })}
+                                                id="passwordId"
+                                                placeholder="Please enter your password"
+                                                required
+                                            />
+                                            {errors?.singUpPassword?.type ===
+                                                'minLength' && (
+                                                <span className="text-red-600">
+                                                    Password must be 6
+                                                    characters
+                                                </span>
+                                            )}
+                                            {errors?.singUpPassword?.type ===
+                                                'pattern' && (
+                                                <span className="text-red-600">
+                                                    Password must be one capital
+                                                    letter or special character.
+                                                </span>
+                                            )}
+                                        </div>
+                                        <div className="flex items-center justify-between mb-3 relative">
+                                            <div>
+                                                <Checkbox />
+                                            </div>
+                                            <div className="text-primaryColor text-base ">
+                                                <p>Forgot your password</p>
+                                            </div>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <>
+                                        <p className="my-5">
+                                            What kind of user do you want to be
+                                            here?
+                                        </p>
+                                        <div>
+                                            <input
+                                                type="radio"
+                                                {...register('userType')}
+                                                value="user"
+                                                id="simpleUser"
+                                                required
+                                            />
+                                            <label
+                                                htmlFor="userType"
+                                                className="text-base font-semibold">
+                                                <span> User</span>
+                                            </label>
+                                        </div>
+
+                                        <br />
+
+                                        <div>
+                                            <input
+                                                type="radio"
+                                                {...register('userType')}
+                                                value="contest-creator"
+                                                id="contest-Creator"
+                                                required
+                                            />
+                                            <label
+                                                htmlFor="userType"
+                                                className="text-base font-semibold">
+                                                <span> Contest Creator</span>
+                                            </label>
+                                        </div>
+                                    </>
+                                )}
+
                                 <div className="mt-8 mb-4 w-fit mx-auto md:mx-0">
                                     <PrimaryBtn>
                                         <span className="uppercase">
                                             {loading ? (
                                                 <ImSpinner9 className="animate-spin text-2xl" />
+                                            ) : nextSingUp ? (
+                                                'Register'
                                             ) : (
                                                 'SingUp'
                                             )}

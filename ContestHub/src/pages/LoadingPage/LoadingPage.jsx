@@ -1,11 +1,12 @@
 import { ImSpinner2 } from 'react-icons/im';
+import logo from '../../assets/Icon/ContestHubLogo.png';
 
 const LoadingPage = () => {
     return (
-        <div className="flex items-center justify-start">
-            <figure className="w-[20rem] relative border p-20">
+        <div className="flex fixed top-0 left-0 z-30 w-screen h-screen items-center justify-center">
+            <figure className="w-[20rem] relative p-20">
                 <img
-                    src="https://i.ibb.co/VBc0Yjh/Contest-Hub-Logo.png"
+                    src={logo}
                     alt="logo"
                     className="w-full h-full object-cover object-center"
                 />

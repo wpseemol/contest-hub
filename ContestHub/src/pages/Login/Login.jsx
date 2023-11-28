@@ -18,7 +18,12 @@ const Login = () => {
     const { loading, singIn, logInGoogle } = useAuthProvider();
 
     //login use email password fun
-    const { register, handleSubmit, reset } = useForm();
+    const {
+        register,
+        handleSubmit,
+        reset,
+        formState: { errors },
+    } = useForm();
 
     const handelLogin = (data) => {
         singIn(data.loginEmail, data.loginPassword)
@@ -185,11 +190,28 @@ const Login = () => {
                                     <input
                                         className=" outline-primaryColor/60 border py-3 rounded text-lg pl-4 w-full mt-1"
                                         type="password"
-                                        {...register('loginPassword')}
+                                        {...register('loginPassword', {
+                                            minLength: 6,
+                                            pattern:
+                                                /^(?=.*[A-Z])(?=.*[!@#$%^&*()_+{}\[\]:;<>,.?~\\/-])/,
+                                        })}
                                         id="passwordId"
                                         placeholder="Please enter your password"
                                         required
                                     />
+                                    {errors?.loginPassword?.type ===
+                                        'minLength' && (
+                                        <span className="text-red-600">
+                                            Password must be 6 characters
+                                        </span>
+                                    )}
+                                    {errors?.loginPassword?.type ===
+                                        'pattern' && (
+                                        <span className="text-red-600">
+                                            Password must be one capital letter
+                                            or special character.
+                                        </span>
+                                    )}
                                 </div>
                                 <div className="flex items-center justify-between mb-3 relative">
                                     <div>
