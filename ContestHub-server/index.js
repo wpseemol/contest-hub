@@ -16,6 +16,22 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
+// token verify
+const verifyToken = async (req, res, next) => {
+    const token = req.cookies['access-token'];
+    if (!token) {
+        return res.status(401).send({ message: 'unauthorized' });
+    }
+    jwt.verify(token, process.env.SECRET, (err, decoded) => {
+        if (err) {
+            return res.status(401).send({ message: 'unauthorized' });
+        }
+
+        req.user = decoded;
+        next();
+    });
+};
+
 //mongodb fun start
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_NAME}:${process.env.DB_PASSWORD}@wpseemol.l30sqti.mongodb.net/?retryWrites=true&w=majority`;
@@ -36,14 +52,85 @@ async function run() {
         // all collection
         const userCollection = contestHub.collection('users');
 
-        //post Operations
+        // User registration
         app.post('/users', async (req, res) => {
-            const user = req.body;
+            const newUser = req.body;
+            const userEmail = newUser.uEmail;
 
-            const result = await userCollection.insertOne(user);
-            res.send(result);
+            const existingUser = await userCollection.findOne({
+                uEmail: userEmail,
+            });
+
+            if (existingUser) {
+                res.status(409).json({
+                    error: 'User with this email already exists.',
+                });
+            } else {
+                const result = await userCollection.insertOne(newUser);
+                res.send(result);
+            }
+
             console.log('User Created Success');
         });
+
+        app.put('/users', async (req, res) => {
+            const user = req.body;
+            const filter = { uEmail: user.uEmail };
+            const updateDoc = {
+                $set: {
+                    role: user.role,
+                },
+            };
+            const result = await userCollection.updateOne(filter, updateDoc);
+            res.send(result);
+        });
+        // User registration
+
+        // user role
+        app.get('/user-role', verifyToken, async (req, res) => {
+            const email = req?.user?.email;
+
+            const query = {
+                uEmail: email,
+            };
+            const options = {
+                projection: {
+                    role: 1,
+                },
+            };
+            const result = await userCollection.findOne(query, options);
+            res.send(result);
+        });
+
+        // jwt created start
+        app.post('/jwt', async (req, res) => {
+            const user = req.body;
+
+            const token = jwt.sign(user, process.env.SECRET, {
+                expiresIn: '30d',
+            });
+
+            res.cookie('access-token', token, {
+                httpOnly: true,
+                secure: true,
+                sameSite: 'none',
+            }).send({ success: true });
+        });
+
+        // cookie remove
+        app.post('/logout', (req, res) => {
+            // Clear the 'access-token' cookie
+            res.cookie('access-token', '', {
+                expires: new Date(0),
+                httpOnly: true,
+                secure: true,
+                sameSite: 'none',
+            });
+
+            res.send({ success: true });
+        });
+
+        // jwt created end
     } finally {
         // Ensures that the client will close when you finish/error
         // await client.close();
