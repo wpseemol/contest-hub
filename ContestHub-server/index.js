@@ -51,6 +51,61 @@ async function run() {
 
         // all collection
         const userCollection = contestHub.collection('users');
+        const contestsCollection = contestHub.collection('contests');
+
+        //verify Contest Creator
+        const verifyContestCreator = async (req, res, next) => {
+            const query = {
+                uEmail: req?.user?.email,
+            };
+            const options = {
+                projection: {
+                    role: 1,
+                },
+            };
+            const result = await userCollection.findOne(query, options);
+
+            if (result.role === 'contest-creator') {
+                next();
+            } else {
+                return res
+                    .status(401)
+                    .send({ message: 'You have no permission' });
+            }
+        };
+        //verify Contest Creator
+        const verifyAdmin = async (req, res, next) => {
+            const query = {
+                uEmail: req?.user?.email,
+            };
+            const options = {
+                projection: {
+                    role: 1,
+                },
+            };
+            const result = await userCollection.findOne(query, options);
+
+            if (result.role === 'admin') {
+                next();
+            } else {
+                return res
+                    .status(401)
+                    .send({ message: 'You have no permission' });
+            }
+        };
+
+        //contest add
+        app.post(
+            '/contests',
+            verifyToken,
+            verifyContestCreator,
+            async (req, res) => {
+                const contest = req.body;
+                const result = await contestsCollection.insertOne(contest);
+                res.send(result);
+                console.log('Add contest successful');
+            }
+        );
 
         // User registration
         app.post('/users', async (req, res) => {
