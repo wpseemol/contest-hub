@@ -2,14 +2,13 @@ import PropTypes from 'prop-types';
 import { FaContao, FaTrophy, FaUsers } from 'react-icons/fa6';
 import { TiDocumentAdd } from 'react-icons/ti';
 import { FaSave, FaUserAlt } from 'react-icons/fa';
-import { BiSolidMessageSquareAdd } from 'react-icons/bi';
 import { RiFileSettingsFill } from 'react-icons/ri';
 import { NavLink } from 'react-router-dom';
 
 const DashboardMenus = ({ isDryerClose, userRole, user }) => {
-    const simpleUser = userRole?.role === 'user';
-    const contestCreator = userRole?.role === 'contest-creator';
-    const isAdmin = userRole?.role === 'admin';
+    const simpleUser = user && userRole?.role === 'user';
+    const contestCreator = user && userRole?.role === 'contest-creator';
+    const isAdmin = user && userRole?.role === 'admin';
 
     return (
         <>
@@ -99,7 +98,7 @@ const DashboardMenus = ({ isDryerClose, userRole, user }) => {
                                 to="/dashboard/my-created-contest"
                                 className="flex items-center gap-2 hover:active duration-300">
                                 <div>
-                                    <BiSolidMessageSquareAdd className="text-2xl" />
+                                    <FaContao className="text-2xl" />
                                 </div>
 
                                 <div
