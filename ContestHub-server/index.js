@@ -1,9 +1,10 @@
 const express = require('express');
 const app = express();
-require('dotenv').config();
 const cors = require('cors');
+require('dotenv').config();
 const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken');
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const port = process.env.PORT || 5000;
 
 // middleware
@@ -33,7 +34,7 @@ const verifyToken = async (req, res, next) => {
 };
 
 //mongodb fun start
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_NAME}:${process.env.DB_PASSWORD}@wpseemol.l30sqti.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -95,6 +96,30 @@ async function run() {
         };
 
         //contest add
+        app.get(
+            '/contests',
+            verifyToken,
+            verifyContestCreator,
+            async (req, res) => {
+                const creatorContest = req?.query?.email;
+
+                const query = { 'author.email': creatorContest };
+
+                const result = await contestsCollection.find(query).toArray();
+                res.send(result);
+            }
+        );
+
+        app.get('/contests/:category', async (req, res) => {
+            const contestCategory = req.params.category;
+
+            const query = { contestType: contestCategory };
+
+            const result = await contestsCollection.find(query).toArray();
+            res.send(result);
+        });
+
+        //contest add
         app.post(
             '/contests',
             verifyToken,
@@ -104,6 +129,39 @@ async function run() {
                 const result = await contestsCollection.insertOne(contest);
                 res.send(result);
                 console.log('Add contest successful');
+            }
+        );
+
+        //payment intent
+        app.post('/create-payment-intent', async (req, res) => {
+            const { price } = req.body;
+            const amount = parseInt(price * 100);
+
+            const paymentIntent = await stripe.paymentIntents.create({
+                amount: amount,
+                currency: 'usd',
+                payment_method_types: ['card'],
+            });
+
+            res.send({
+                clientSecret: paymentIntent.client_secret,
+            });
+        });
+
+        // contest deleted
+        app.delete(
+            '/contests/:id',
+            verifyToken,
+            verifyContestCreator,
+            async (req, res) => {
+                const contestRemoveId = req.params.id;
+
+                const query = {
+                    _id: new ObjectId(contestRemoveId),
+                };
+                const result = await contestsCollection.deleteOne(query);
+                res.send(result);
+                console.log('contest deleted successful');
             }
         );
 
@@ -123,9 +181,8 @@ async function run() {
             } else {
                 const result = await userCollection.insertOne(newUser);
                 res.send(result);
+                console.log('User Created Success');
             }
-
-            console.log('User Created Success');
         });
 
         app.put('/users', async (req, res) => {
