@@ -15,6 +15,9 @@ import MyCreatedContest from '../pages/MyCreatedContest/MyCreatedContest';
 import ContestSubmittedPage from '../pages/ContestSubmittedPage/ContestSubmittedPage';
 import ManageUser from '../pages/ManageUser/ManageUser';
 import ManageContest from '../pages/ManageContest/ManageContest';
+import PrivetRouteForAdmin from '../PrivetRouteForAdmin/PrivetRouteForAdmin';
+import PrivetRouteForCreator from '../PrivetRouteForCreator/PrivetRouteForCreator';
+import DashboardComponent from '../components/DashboardComponent/DashboardComponent';
 
 const router = createBrowserRouter([
     {
@@ -49,6 +52,14 @@ const router = createBrowserRouter([
         ),
         children: [
             {
+                path: '/dashboard',
+                element: (
+                    <PrivetRoute>
+                        <DashboardComponent />
+                    </PrivetRoute>
+                ),
+            },
+            {
                 path: '/dashboard/profile',
                 element: (
                     <PrivetRoute>
@@ -75,41 +86,41 @@ const router = createBrowserRouter([
             {
                 path: '/dashboard/add-contest',
                 element: (
-                    <PrivetRoute>
+                    <PrivetRouteForCreator>
                         <AddContest />
-                    </PrivetRoute>
+                    </PrivetRouteForCreator>
                 ),
             },
             {
                 path: '/dashboard/my-created-contest',
                 element: (
-                    <PrivetRoute>
+                    <PrivetRouteForCreator>
                         <MyCreatedContest />
-                    </PrivetRoute>
+                    </PrivetRouteForCreator>
                 ),
             },
             {
                 path: '/dashboard/contest-submitted-page',
                 element: (
-                    <PrivetRoute>
+                    <PrivetRouteForCreator>
                         <ContestSubmittedPage />
-                    </PrivetRoute>
+                    </PrivetRouteForCreator>
                 ),
             },
             {
                 path: '/dashboard/manage-user',
                 element: (
-                    <PrivetRoute>
+                    <PrivetRouteForAdmin>
                         <ManageUser />
-                    </PrivetRoute>
+                    </PrivetRouteForAdmin>
                 ),
             },
             {
                 path: '/dashboard/manage-contest',
                 element: (
-                    <PrivetRoute>
+                    <PrivetRouteForAdmin>
                         <ManageContest />
-                    </PrivetRoute>
+                    </PrivetRouteForAdmin>
                 ),
             },
         ],

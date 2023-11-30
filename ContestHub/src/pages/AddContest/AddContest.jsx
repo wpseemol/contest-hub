@@ -1,11 +1,11 @@
 import { useForm } from 'react-hook-form';
 import Title from '../../components/Title/Title';
-import useAxiosPublic from '../../hook/useAxiosPublic/useAxiosPublic';
-import Swal from 'sweetalert2';
 import useAuthProvider from '../../hook/useAuthProvider/useAuthProvider';
+import useAxiosSecure from '../../hook/useAxiosSecure/useAxiosSecure';
+import Swal from 'sweetalert2';
 
 const AddContest = () => {
-    const publicBaseUrl = useAxiosPublic();
+    const secureBaseUrl = useAxiosSecure();
     const { user } = useAuthProvider();
 
     const {
@@ -22,8 +22,8 @@ const AddContest = () => {
             name: user?.displayName,
         };
 
-        publicBaseUrl
-            .post('/contests', { ...data, postBy: author })
+        secureBaseUrl
+            .post('/contests', { ...data, author })
             .then(() => {
                 Swal.fire({
                     position: 'top-end',
@@ -130,18 +130,31 @@ const AddContest = () => {
                             <select
                                 {...register('contestType')}
                                 required
-                                className="bg-neutral-800/5 dark:border-[#313335] rounded pl-3 round p-2 outline-none text-base font-normal border w-full">
-                                <option value="">Select...</option>
-                                <option value="business-contest">
+                                className="bg-neutral-800/5 dark:border-[#313335] rounded pl-3 round p-2 outline-none text-base font-normal border w-full relative h-10 px-4 transition-all  appearance-none focus-visible:outline-none peer border-slate-200 autofill:bg-neutral-800/5 focus:border-[#313335]focus:focus-visible:outline-none disabled:cursor-not-allowed disabled:bg-neutral-800/5 disabled:text-slate-400
+                                ">
+                                <option value="" disabled>
+                                    Select...
+                                </option>
+                                <option
+                                    value="business-contest"
+                                    className="bg-neutral-800/5 dark:border-[#313335]">
                                     Business Contest
                                 </option>
-                                <option value="medical-contest">
+                                <option
+                                    value="medical-contest"
+                                    className="bg-neutral-800/5 dark:border-[#313335]">
                                     Medical Contest
                                 </option>
-                                <option value="article-writing">
+                                <option
+                                    value="article-writing"
+                                    className="bg-neutral-800/5 dark:border-[#313335]">
                                     Article Writing
                                 </option>
-                                <option value="gaming">Gaming</option>
+                                <option
+                                    value="gaming"
+                                    className="bg-neutral-800/5 dark:border-[#313335]">
+                                    Gaming
+                                </option>
                             </select>
                         </div>
                         <div className="md:col-span-2 mt-1">

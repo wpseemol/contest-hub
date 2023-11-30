@@ -1,7 +1,6 @@
 import { Link, Outlet } from 'react-router-dom';
 import DarkModeToggle from '../../components/DarkModeToggle/DarkModeToggle';
 import { RiMenu2Line } from 'react-icons/ri';
-import DashboardContent from '../../components/DashboardContent/DashboardContent';
 import DashboardMenus from '../../components/DashboardMenus/DashboardMenus';
 import { useState } from 'react';
 import useAuthProvider from '../../hook/useAuthProvider/useAuthProvider';
@@ -198,7 +197,7 @@ const Dashboard = () => {
                 }  dark:bg-[#252729] bg-[#f0f1f7] min-h-[calc(100vh-4rem)] ml-auto duration-300
                  dark:text-neutral-300 text-neutral-700 p-4
                 `}>
-                <Outlet />
+                <Outlet userRole={data ? data : {}} />
             </div>
         </div>
     );

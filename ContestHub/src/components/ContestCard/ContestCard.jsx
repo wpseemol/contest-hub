@@ -1,42 +1,28 @@
+import PaymentComponent from '../PaymentComponent/PaymentComponent';
 import PrimaryBtn from '../PrimaryBtn/PrimaryBtn';
+import PropTypes from 'prop-types';
+const ContestCard = ({ contest }) => {
+    const handelDetails = () => {
+        console.log(contest?._id);
+    };
 
-const ContestCard = () => {
     return (
         <>
-            <div className="flex items-center gap-10 justify-center border-b last:border-none">
-                <div className="p-4  font-medium lg:w-3/5 sm:w-1/2">
+            <div className="flex items-center sm:gap-10 gap-44 justify-center border-b last:border-none relative md:w-fit w-screen">
+                <div className="p-4  font-medium lg:w-3/5 sm:w-1/2 ">
                     <div>
                         <h2 className="lg:text-2xl md:text-xl text-base font-bold">
-                            Snowbird Agility Government Contracting
+                            {contest.contestName}
                         </h2>
                     </div>
                     <div className=" my-5 hidden md:block">
-                        <p>
-                            *** We have selected a winner *** (but the website
-                            does not let me close the contest.) Please do not
-                            make new entries. We really appreciate all the ideas
-                            that ha...
-                        </p>
+                        <p>{contest.contestDescription}</p>
                     </div>
                     <div className="flex items-center gap-4 overflow-x-auto">
                         <figure className="sm:w-20 w-8 sm:h-14 h-6">
                             <img
-                                src="https://dynamic.brandcrowd.com/asset/logo/39bc3cc5-b97f-4acb-a436-ab0b551fa765/logo-search-grid-1x?logoTemplateVersion=2&v=638306996616630000"
-                                alt=""
-                                className="w-full h-full object-cover object-center"
-                            />
-                        </figure>
-                        <figure className="sm:w-20 w-8 sm:h-14 h-6">
-                            <img
-                                src="https://www.onlinelogomaker.com/blog/wp-content/uploads/2017/07/door-company-logo.jpg"
-                                alt=""
-                                className="w-full h-full object-cover object-center"
-                            />
-                        </figure>
-                        <figure className="sm:w-20 w-8 sm:h-14 h-6">
-                            <img
-                                src="https://www.onlinelogomaker.com/blog/wp-content/uploads/2017/07/door-company-logo.jpg"
-                                alt=""
+                                src={contest.contestImage}
+                                alt={contest.contestName}
                                 className="w-full h-full object-cover object-center"
                             />
                         </figure>
@@ -45,18 +31,30 @@ const ContestCard = () => {
 
                 <div className="flex items-center justify-evenly lg:w-2/5 sm:w-1/2 gap-10 pr-3 text-center">
                     <div className="mx-auto hidden md:block">
-                        <p className="">629</p>
+                        <p className="">
+                            {contest?.entries ? contest?.entries : '0'}
+                        </p>
                     </div>
                     <div className="mx-auto ">
-                        <p>$ 495</p>
+                        <p>${contest.prizeMoney}.00</p>
                     </div>
-                    <div className="mx-auto hidden md:block">
+                    <div
+                        className="mx-auto hidden md:block"
+                        onClick={handelDetails}>
                         <PrimaryBtn>Details</PrimaryBtn>
                     </div>
                 </div>
+                <PaymentComponent contestPrice={contest?.contestPrice}>
+                    <PrimaryBtn>
+                        Pay to enroll
+                        <span> ${contest?.contestPrice}.00</span>
+                    </PrimaryBtn>
+                </PaymentComponent>
             </div>
         </>
     );
 };
 
 export default ContestCard;
+
+ContestCard.propTypes = { contest: PropTypes.object };
