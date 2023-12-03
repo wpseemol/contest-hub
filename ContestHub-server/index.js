@@ -58,6 +58,7 @@ async function run() {
         const userCollection = contestHub.collection('users');
         const contestsCollection = contestHub.collection('contests');
         const enrollmentCollection = contestHub.collection('enrollment');
+        const winnerCollection = contestHub.collection('winner');
 
         //verify Contest Creator
         const verifyContestCreator = async (req, res, next) => {
@@ -148,6 +149,15 @@ async function run() {
                 .limit(limit);
 
             const result = await topContestParticipate.toArray();
+            res.send(result);
+        });
+
+        // leader board backend fun
+        app.get('/leader-board', async (req, res) => {
+            const sort = { winner: -1 };
+
+            const result = await winnerCollection.find().sort(sort).toArray();
+
             res.send(result);
         });
 
