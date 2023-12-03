@@ -9,16 +9,13 @@ import { IoCloseOutline } from 'react-icons/io5';
 import { MdOutlineLogout } from 'react-icons/md';
 import Swal from 'sweetalert2';
 import useAxiosPublic from '../../hook/useAxiosPublic/useAxiosPublic';
-import useUserRole from '../../hook/useUserRole/useUserRole';
 
 const Dashboard = () => {
     const [isDryerClose, setIsDryerClose] = useState(false);
 
-    const { user, loading, logOut } = useAuthProvider();
+    const { user, loading, logOut, userRole } = useAuthProvider();
 
     const publicBaseUrl = useAxiosPublic();
-
-    const { data, isLoading } = useUserRole();
 
     const handelLogout = () => {
         publicBaseUrl.post('/logout').then(() => {});
@@ -81,7 +78,7 @@ const Dashboard = () => {
                         <div className="">
                             <DashboardMenus
                                 user={user ? user : {}}
-                                userRole={data}
+                                userRole={userRole}
                                 isDryerClose={isDryerClose}
                             />
                         </div>
@@ -151,7 +148,7 @@ const Dashboard = () => {
                                             {user.displayName}
                                         </h2>
                                         <p className="font-semibold">
-                                            {isLoading ? (
+                                            {!userRole ? (
                                                 <>
                                                     <span className="animate-bounce">
                                                         ...
@@ -160,7 +157,7 @@ const Dashboard = () => {
                                             ) : (
                                                 <>
                                                     <span className="capitalize">
-                                                        {data?.role?.replace(
+                                                        {userRole?.replace(
                                                             /-/g,
                                                             ' '
                                                         )}
@@ -197,7 +194,7 @@ const Dashboard = () => {
                 }  dark:bg-[#252729] bg-[#f0f1f7] min-h-[calc(100vh-4rem)] ml-auto duration-300
                  dark:text-neutral-300 text-neutral-700 p-4
                 `}>
-                <Outlet userRole={data ? data : {}} />
+                <Outlet />
             </div>
         </div>
     );

@@ -23,7 +23,7 @@ const AddContest = () => {
         };
 
         secureBaseUrl
-            .post('/contests', { ...data, author })
+            .post('/contests', { ...data, author, participants: 0 })
             .then(() => {
                 Swal.fire({
                     position: 'top-end',

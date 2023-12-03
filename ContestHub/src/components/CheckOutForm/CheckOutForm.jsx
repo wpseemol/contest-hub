@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { useState } from 'react';
 import useAuthProvider from '../../hook/useAuthProvider/useAuthProvider';
 
-const CheckOutForm = ({ setGoToPayment, contestPrice }) => {
+const CheckOutForm = ({ setGoToPayment, enrolContest }) => {
     const [clientSecret, setClientSecret] = useState('');
 
     const stripe = useStripe();
@@ -17,11 +17,11 @@ const CheckOutForm = ({ setGoToPayment, contestPrice }) => {
 
     useEffect(() => {
         secureBaseUrl
-            .post('/create-payment-intent', { price: contestPrice })
+            .post('/create-payment-intent', { price: enrolContest.price })
             .then((res) => {
                 setClientSecret(res.data.clientSecret);
             });
-    }, [secureBaseUrl, contestPrice]);
+    }, [secureBaseUrl, enrolContest]);
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -46,8 +46,6 @@ const CheckOutForm = ({ setGoToPayment, contestPrice }) => {
                 title: 'Oops...',
                 text: error.message,
             });
-        } else {
-            setGoToPayment(false);
         }
 
         //confirm payment
@@ -69,16 +67,30 @@ const CheckOutForm = ({ setGoToPayment, contestPrice }) => {
                 text: confirmError.message,
             });
         } else {
-            if (paymentIntent.status === 'succeeded')
-                Swal.fire({
-                    position: 'top-end',
-                    icon: 'success',
-                    title:
-                        'Your payment is successful. Your transaction id: ' +
-                        paymentIntent.id,
-                    showConfirmButton: false,
-                    timer: 3000,
-                });
+            if (paymentIntent.status === 'succeeded') {
+                secureBaseUrl
+                    .post('/enrollment', {
+                        enrolContestId: enrolContest.enrolContestId,
+                        price: enrolContest.price,
+                        enrolUser: user?.email,
+                        enrolName: user?.displayName,
+                        transactionID: paymentIntent.id,
+                        enrolTime: paymentIntent.created,
+                    })
+                    .then(() => {
+                        Swal.fire(
+                            'Payment successful transaction ID:' +
+                                paymentIntent.id
+                        );
+
+                        setGoToPayment(false);
+                    })
+                    .catch(() => {
+                        return;
+                    });
+
+                console.log(paymentIntent);
+            }
         }
     };
 
@@ -117,5 +129,5 @@ export default CheckOutForm;
 
 CheckOutForm.propTypes = {
     setGoToPayment: PropTypes.func,
-    contestPrice: PropTypes.string,
+    enrolContest: PropTypes.object,
 };

@@ -1,5 +1,6 @@
 import Marquee from 'react-fast-marquee';
 import Title from '../Title/Title';
+import PropTypes from 'prop-types';
 
 const BestContestCreator = () => {
     const bestContectCreator = [1, 2, 3];
@@ -10,10 +11,10 @@ const BestContestCreator = () => {
             </div>
             <div className="py-8">
                 <Marquee pauseOnHover={true}>
-                    {bestContectCreator.map((creator) => {
+                    {bestContectCreator.map((creator, inx) => {
                         return (
                             <div
-                                key={creator}
+                                key={inx}
                                 className="lg:w-[30rem] sm:w-[20rem] w-[19.6rem] bg-white border rounded p-8 overflow-hidden mr-10">
                                 <div className="hover:scale-105 duration-300">
                                     <div>
@@ -55,3 +56,5 @@ const BestContestCreator = () => {
 };
 
 export default BestContestCreator;
+
+BestContestCreator.propTypes = { bestContectCreator: PropTypes.array };

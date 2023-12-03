@@ -35,7 +35,7 @@ const Login = () => {
         setLoading(true);
         if (!nextLogin) {
             singIn(data.loginEmail, data.loginPassword)
-                .then(() => {
+                .then(async () => {
                     Swal.fire({
                         position: 'top-end',
                         icon: 'success',
@@ -47,7 +47,10 @@ const Login = () => {
 
                     // jwt token set
                     const email = data.loginEmail;
-                    publicBaseUrl.post('/jwt', { email }).then(() => {});
+                    publicBaseUrl.post('/jwt', { email }).then(async () => {
+                        const userRole = await publicBaseUrl.get('/user-role');
+                        localStorage.setItem('user-role', userRole.data.role);
+                    });
 
                     location?.state
                         ? navigate(location?.state?.from)
@@ -91,12 +94,15 @@ const Login = () => {
         setGoogleLoginLoading(true);
 
         logInGoogle()
-            .then((userCredential) => {
+            .then(async (userCredential) => {
                 setNextLogin(true);
 
                 // jwt token set
                 const email = userCredential.user?.email;
-                publicBaseUrl.post('/jwt', { email }).then(() => {});
+                publicBaseUrl.post('/jwt', { email }).then(async () => {
+                    const userRole = await publicBaseUrl.get('/user-role');
+                    localStorage.setItem('user-role', userRole.data.role);
+                });
 
                 publicBaseUrl
                     .post('/users', {

@@ -3,17 +3,16 @@ import PropTypes from 'prop-types';
 import { Navigate, useLocation } from 'react-router-dom';
 import LoadingPage from '../pages/LoadingPage/LoadingPage';
 import useAuthProvider from '../hook/useAuthProvider/useAuthProvider';
-import useUserRole from '../hook/useUserRole/useUserRole';
+
 const PrivetRouteForAdmin = ({ children }) => {
-    const { user, loading } = useAuthProvider();
-    const { data, isLoading } = useUserRole();
+    const { user, loading, userRole } = useAuthProvider();
 
     const location = useLocation();
 
-    if (loading && isLoading) {
+    if (loading) {
         return <LoadingPage />;
     }
-    if (user && data.role === 'admin') {
+    if (user && userRole === 'admin') {
         return children;
     }
 

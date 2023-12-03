@@ -6,6 +6,11 @@ const ContestCard = ({ contest }) => {
         console.log(contest?._id);
     };
 
+    const enrolContest = {
+        enrolContestId: contest?._id,
+        price: contest?.contestPrice,
+    };
+
     return (
         <>
             <div className="flex items-center sm:gap-10 gap-44 justify-center border-b last:border-none relative md:w-fit w-screen">
@@ -44,7 +49,7 @@ const ContestCard = ({ contest }) => {
                         <PrimaryBtn>Details</PrimaryBtn>
                     </div>
                 </div>
-                <PaymentComponent contestPrice={contest?.contestPrice}>
+                <PaymentComponent enrolContest={enrolContest}>
                     <PrimaryBtn>
                         Pay to enroll
                         <span> ${contest?.contestPrice}.00</span>

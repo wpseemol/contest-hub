@@ -17,11 +17,7 @@ const Contest = () => {
 
     const publicBaseUrl = useAxiosPublic();
 
-    const {
-        data = [],
-        refetch,
-        isLoading,
-    } = useQuery({
+    const { data = [], isLoading } = useQuery({
         queryKey: [contestCategory],
 
         queryFn: async () => {

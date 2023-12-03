@@ -1,9 +1,8 @@
 import useAuthProvider from '../../hook/useAuthProvider/useAuthProvider';
-import useUserRole from '../../hook/useUserRole/useUserRole';
 
 const DashboardComponent = () => {
-    const { user } = useAuthProvider();
-    const { data, isLoading } = useUserRole();
+    const { user, userRole } = useAuthProvider();
+
     return (
         <>
             <div className="lg:text-5xl md:text-4xl text-2xl font-bold">
@@ -33,11 +32,11 @@ const DashboardComponent = () => {
                         {user?.displayName ? user?.displayName : ''}
                     </h2>
                     <h3 className="mt-2 text-xl font-semibold">
-                        {isLoading ? (
+                        {!userRole ? (
                             'Loading...'
                         ) : (
                             <span className="capitalize">
-                                {data?.role?.replace(/-/g, ' ')}
+                                {userRole.replace(/-/g, ' ')}
                             </span>
                         )}
                     </h3>

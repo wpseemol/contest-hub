@@ -5,7 +5,14 @@ const Error = () => {
     return (
         <div className="flex items-center justify-center h-screen text-3xl font-bold text-center">
             <div>
-                this is 404 page go back you home page
+                <div>
+                    <figure>
+                        <img
+                            src="https://siliconvalleygazette.com/posts/what-is-the-404-not-found-error.png"
+                            alt="errorImage"
+                        />
+                    </figure>
+                </div>
                 <br />
                 <br />
                 <Link to="/">

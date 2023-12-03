@@ -2,11 +2,11 @@ import Container from '../Container/Container';
 import ContestBrand from '../ContestBrand/ContestBrand';
 import HeroBg from '../HeroBg/HeroBg';
 
-import { IoSearch } from 'react-icons/io5';
+import SearchComponent from '../SearchComponent/SearchComponent';
 
 const HeroSection = () => {
     return (
-        <div className="relative bg-gradient-to-b from-[#edfcff] to-white py-24 z-10 overflow-hidden">
+        <div className="relative bg-gradient-to-b from-[#edfcff] to-white py-24 z-20 overflow-hidden">
             <Container>
                 <div className="flex lg:flex-row flex-col items-center justify-between text-fontColor text-center lg:text-left gap-6 lg:gap-0 py-16">
                     <div>
@@ -23,22 +23,8 @@ const HeroSection = () => {
                                 just for you Start a contest Watch how it works
                             </p>
                         </div>
-                        <div className="flex items-center mx-auto lg:mx-0 border-primaryColor rounded-full border w-fit overflow-hidden bg-white relative z-[3]">
-                            <input
-                                placeholder="Search Contest"
-                                type="text"
-                                id="searchBoxId"
-                                name="searchBox"
-                                className="ml-2 h-[2.8rem] sm:w-[18rem] w-full outline-none font-medium "
-                            />
-                            <button
-                                className="bg-primaryColor text-white py-2
-                             px-6 group overflow-hidden hover:bg-primaryColor/80 duration-200">
-                                <span className="text-3xl ">
-                                    <IoSearch className="" />
-                                </span>
-                            </button>
-                        </div>
+                        {/* search  */}
+                        <SearchComponent />
                     </div>
                     <div className=" sm:w-[45rem] relative">
                         <figure className="sm:w-[20rem] mx-auto p-5 sm:p-0">

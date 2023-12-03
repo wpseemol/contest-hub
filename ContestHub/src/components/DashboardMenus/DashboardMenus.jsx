@@ -6,9 +6,9 @@ import { RiFileSettingsFill } from 'react-icons/ri';
 import { NavLink } from 'react-router-dom';
 
 const DashboardMenus = ({ isDryerClose, userRole, user }) => {
-    const simpleUser = user && userRole?.role === 'user';
-    const contestCreator = user && userRole?.role === 'contest-creator';
-    const isAdmin = user && userRole?.role === 'admin';
+    const simpleUser = user && userRole === 'user';
+    const contestCreator = user && userRole === 'contest-creator';
+    const isAdmin = user && userRole === 'admin';
 
     return (
         <>
@@ -179,6 +179,6 @@ const DashboardMenus = ({ isDryerClose, userRole, user }) => {
 export default DashboardMenus;
 DashboardMenus.propTypes = {
     user: PropTypes.object,
-    userRole: PropTypes.object,
+    userRole: PropTypes.string,
     isDryerClose: PropTypes.bool,
 };
