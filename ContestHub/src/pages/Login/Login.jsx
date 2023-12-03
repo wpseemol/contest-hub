@@ -49,6 +49,7 @@ const Login = () => {
                     const email = data.loginEmail;
                     publicBaseUrl.post('/jwt', { email }).then(async () => {
                         const userRole = await publicBaseUrl.get('/user-role');
+
                         localStorage.setItem('user-role', userRole.data.role);
                     });
 

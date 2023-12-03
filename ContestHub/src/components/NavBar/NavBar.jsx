@@ -13,6 +13,7 @@ const NavBar = () => {
     const menus = [
         { path: '/', menu: 'Home' },
         { path: '/contest', menu: 'Contest' },
+        { path: '/leader-board', menu: 'Leader Board' },
         { path: '/blog', menu: 'Blog' },
         { path: '/contact', menu: 'Contact' },
         { path: '/about', menu: 'About Us' },
