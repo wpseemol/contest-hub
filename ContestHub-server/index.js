@@ -9,7 +9,11 @@ const port = process.env.PORT || 5000;
 
 // middleware
 const corsOptions = {
-    origin: ['http://localhost:5173'],
+    origin: [
+        'http://localhost:5173',
+        'https://contesthub-a8675.web.app',
+        'https://superlative-boba-1e1ca5.netlify.app',
+    ],
     credentials: true,
     optionSuccessStatus: 200,
 };
@@ -53,6 +57,7 @@ async function run() {
         // all collection
         const userCollection = contestHub.collection('users');
         const contestsCollection = contestHub.collection('contests');
+        const enrollmentCollection = contestHub.collection('enrollment');
 
         //verify Contest Creator
         const verifyContestCreator = async (req, res, next) => {
@@ -110,12 +115,39 @@ async function run() {
             }
         );
 
+        // search backend fun
+        app.get('/search-contests', async (req, res) => {
+            const creatorSearchText = req.query.search;
+
+            const query = {
+                contestType: { $regex: creatorSearchText, $options: 'i' },
+            };
+
+            const result = await contestsCollection.find(query).toArray();
+            res.send(result);
+        });
+
         app.get('/contests/:category', async (req, res) => {
             const contestCategory = req.params.category;
 
             const query = { contestType: contestCategory };
 
             const result = await contestsCollection.find(query).toArray();
+            res.send(result);
+        });
+
+        // get top Participate contest
+        app.get('/top-participate', async (req, res) => {
+            const sort = { buyCount: -1 };
+            const offset = 0;
+            const limit = 4;
+            const topContestParticipate = contestsCollection
+                .find()
+                .sort(sort)
+                .skip(offset)
+                .limit(limit);
+
+            const result = await topContestParticipate.toArray();
             res.send(result);
         });
 
@@ -131,6 +163,37 @@ async function run() {
                 console.log('Add contest successful');
             }
         );
+
+        // Enrollment
+        app.post('/enrollment', verifyToken, async (req, res) => {
+            const enrolContest = req.body;
+            try {
+                const result = await enrollmentCollection.insertOne(
+                    enrolContest
+                );
+                res.send(result);
+            } catch (error) {
+                res.status(400).send('you ar already payment');
+            }
+        });
+        app.put('/enrollment/:id', verifyToken, async (req, res) => {
+            const enrolContestId = req.params.id;
+            const enrolContestElement = req.body;
+
+            const filter = { enrolContestId: enrolContestId };
+
+            console.log(filter, enrolContestElement);
+
+            const updateDoc = {
+                enrolContestElement,
+            };
+            // Update the first document that matches the filter
+            const result = await enrollmentCollection.updateOne(
+                filter,
+                updateDoc
+            );
+            res.send(result);
+        });
 
         //payment intent
         app.post('/create-payment-intent', async (req, res) => {
