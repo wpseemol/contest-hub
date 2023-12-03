@@ -128,12 +128,31 @@ async function run() {
             res.send(result);
         });
 
+        //count data get
         app.get('/contests/:category', async (req, res) => {
             const contestCategory = req.params.category;
 
             const query = { contestType: contestCategory };
 
             const result = await contestsCollection.find(query).toArray();
+
+            res.send({ contestCount: result.length });
+        });
+        //    pagination function
+        app.get('/contests-category', async (req, res) => {
+            const contestCategory = req.query.category;
+            const pageNumber = req.query;
+
+            const offset = 0;
+            const limit = 10;
+
+            const query = { contestType: contestCategory };
+
+            const result = await contestsCollection
+                .find(query)
+                .skip(offset * limit)
+                .limit(limit)
+                .toArray();
             res.send(result);
         });
 
