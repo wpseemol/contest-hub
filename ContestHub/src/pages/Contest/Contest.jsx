@@ -7,26 +7,53 @@ import ContestCard from '../../components/ContestCard/ContestCard';
 import ContestCardHeader from '../../components/ContestCardHeader/ContestCardHeader';
 import ContestCardContainer from '../../components/ContestCardContainer/ContestCardContainer';
 import { Helmet } from 'react-helmet-async';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import ContestLoading from '../../components/ContestLoading/ContestLoading';
 import useAxiosPublic from '../../hook/useAxiosPublic/useAxiosPublic';
 
 const Contest = () => {
     const [contestCategory, setContestCategory] = useState('gaming');
+    const [count, setCount] = useState({});
+    const [clickButton, setClickButton] = useState(0);
 
     const publicBaseUrl = useAxiosPublic();
 
-    const { data = [], isLoading } = useQuery({
+    useEffect(() => {
+        publicBaseUrl.get(`/contests/${contestCategory}`).then((res) => {
+            setCount(res.data);
+        });
+    }, [contestCategory, publicBaseUrl]);
+
+    const { contestCount } = count;
+
+    const {
+        data = [],
+        isLoading,
+        refetch,
+    } = useQuery({
         queryKey: [contestCategory],
 
         queryFn: async () => {
             const contestCategoryData = await publicBaseUrl.get(
-                `/contests/${contestCategory}`
+                `/contests-category?category=${contestCategory}&pageNumber=${clickButton}`
             );
+
             return contestCategoryData.data;
         },
     });
+
+    useEffect(() => {
+        refetch();
+    }, [refetch, contestCategory, clickButton]);
+
+    const itemParPage = 10;
+
+    const pageNumber = Math.ceil(contestCount ? contestCount : 0 / itemParPage);
+
+    const pages = [...Array(pageNumber).keys()];
+
+    // const pages = [0, 1, 2, 3, 4];
 
     return (
         <>
@@ -99,6 +126,48 @@ const Contest = () => {
                                         })}
                                     </ContestCardContainer>
                                 )}
+
+                                {/* pagination style */}
+
+                                <div className="w-fit mx-auto flex items-center justify-center gap-3 my-6">
+                                    <button
+                                        disabled={!clickButton}
+                                        onClick={() => {
+                                            clickButton &&
+                                                setClickButton(clickButton - 1);
+                                        }}
+                                        className="p-2 bg-slate-500 text-white font-bold rounded-md disabled:bg-slate-400/50">
+                                        Previous
+                                    </button>
+                                    {pages?.map((element, inx) => {
+                                        return (
+                                            <button
+                                                key={inx}
+                                                onClick={() => {
+                                                    setClickButton(element);
+                                                }}
+                                                className={`${
+                                                    clickButton === element
+                                                        ? 'bg-primaryColor/50 text-white'
+                                                        : 'bg-white text-neutral-700'
+                                                } p-2 border font-bold rounded-md
+                                                hover:bg-primaryColor/50 hover:text-white duration-300`}>
+                                                {element + 1}
+                                            </button>
+                                        );
+                                    })}
+                                    <button
+                                        disabled={
+                                            !(clickButton < pages?.length - 1)
+                                        }
+                                        onClick={() => {
+                                            clickButton < pages?.length - 1 &&
+                                                setClickButton(clickButton + 1);
+                                        }}
+                                        className="p-2 bg-slate-500 text-white font-bold rounded-md disabled:bg-slate-400/50">
+                                        Next
+                                    </button>
+                                </div>
                             </TabPanel>
                             <TabPanel>
                                 {isLoading ? (
@@ -127,6 +196,47 @@ const Contest = () => {
                                         })}
                                     </ContestCardContainer>
                                 )}
+                                {/* pagination style */}
+
+                                <div className="w-fit mx-auto flex items-center justify-center gap-3 my-6">
+                                    <button
+                                        disabled={!clickButton}
+                                        onClick={() => {
+                                            clickButton &&
+                                                setClickButton(clickButton - 1);
+                                        }}
+                                        className="p-2 bg-slate-500 text-white font-bold rounded-md disabled:bg-slate-400/50">
+                                        Previous
+                                    </button>
+                                    {pages?.map((element, inx) => {
+                                        return (
+                                            <button
+                                                key={inx}
+                                                onClick={() => {
+                                                    setClickButton(element);
+                                                }}
+                                                className={`${
+                                                    clickButton === element
+                                                        ? 'bg-primaryColor/50 text-white'
+                                                        : 'bg-white text-neutral-700'
+                                                } p-2 border font-bold rounded-md
+                                                hover:bg-primaryColor/50 hover:text-white duration-300`}>
+                                                {element + 1}
+                                            </button>
+                                        );
+                                    })}
+                                    <button
+                                        disabled={
+                                            !(clickButton < pages?.length - 1)
+                                        }
+                                        onClick={() => {
+                                            clickButton < pages?.length - 1 &&
+                                                setClickButton(clickButton + 1);
+                                        }}
+                                        className="p-2 bg-slate-500 text-white font-bold rounded-md disabled:bg-slate-400/50">
+                                        Next
+                                    </button>
+                                </div>
                             </TabPanel>
                             <TabPanel>
                                 {isLoading ? (
@@ -155,6 +265,47 @@ const Contest = () => {
                                         })}
                                     </ContestCardContainer>
                                 )}
+                                {/* pagination style */}
+
+                                <div className="w-fit mx-auto flex items-center justify-center gap-3 my-6">
+                                    <button
+                                        disabled={!clickButton}
+                                        onClick={() => {
+                                            clickButton &&
+                                                setClickButton(clickButton - 1);
+                                        }}
+                                        className="p-2 bg-slate-500 text-white font-bold rounded-md disabled:bg-slate-400/50">
+                                        Previous
+                                    </button>
+                                    {pages?.map((element, inx) => {
+                                        return (
+                                            <button
+                                                key={inx}
+                                                onClick={() => {
+                                                    setClickButton(element);
+                                                }}
+                                                className={`${
+                                                    clickButton === element
+                                                        ? 'bg-primaryColor/50 text-white'
+                                                        : 'bg-white text-neutral-700'
+                                                } p-2 border font-bold rounded-md
+                                                hover:bg-primaryColor/50 hover:text-white duration-300`}>
+                                                {element + 1}
+                                            </button>
+                                        );
+                                    })}
+                                    <button
+                                        disabled={
+                                            !(clickButton < pages?.length - 1)
+                                        }
+                                        onClick={() => {
+                                            clickButton < pages?.length - 1 &&
+                                                setClickButton(clickButton + 1);
+                                        }}
+                                        className="p-2 bg-slate-500 text-white font-bold rounded-md disabled:bg-slate-400/50">
+                                        Next
+                                    </button>
+                                </div>
                             </TabPanel>
                             <TabPanel>
                                 {isLoading ? (
@@ -183,6 +334,47 @@ const Contest = () => {
                                         })}
                                     </ContestCardContainer>
                                 )}
+                                {/* pagination style */}
+
+                                <div className="w-fit mx-auto flex items-center justify-center gap-3 my-6">
+                                    <button
+                                        disabled={!clickButton}
+                                        onClick={() => {
+                                            clickButton &&
+                                                setClickButton(clickButton - 1);
+                                        }}
+                                        className="p-2 bg-slate-500 text-white font-bold rounded-md disabled:bg-slate-400/50">
+                                        Previous
+                                    </button>
+                                    {pages?.map((element, inx) => {
+                                        return (
+                                            <button
+                                                key={inx}
+                                                onClick={() => {
+                                                    setClickButton(element);
+                                                }}
+                                                className={`${
+                                                    clickButton === element
+                                                        ? 'bg-primaryColor/50 text-white'
+                                                        : 'bg-white text-neutral-700'
+                                                } p-2 border font-bold rounded-md
+                                                hover:bg-primaryColor/50 hover:text-white duration-300`}>
+                                                {element + 1}
+                                            </button>
+                                        );
+                                    })}
+                                    <button
+                                        disabled={
+                                            !(clickButton < pages?.length - 1)
+                                        }
+                                        onClick={() => {
+                                            clickButton < pages?.length - 1 &&
+                                                setClickButton(clickButton + 1);
+                                        }}
+                                        className="p-2 bg-slate-500 text-white font-bold rounded-md disabled:bg-slate-400/50">
+                                        Next
+                                    </button>
+                                </div>
                             </TabPanel>
                         </Tabs>
                     </div>

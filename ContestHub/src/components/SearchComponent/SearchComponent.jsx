@@ -55,13 +55,20 @@ const SearchComponent = () => {
                         : 'w-0 h-0 opacity-0 scale-0'
                 } fixed top-20 left-0   border-red-400 bg-gradient-to-b from-[#c8fcff] to-white z-20 duration-300`}>
                 <div className="relative">
-                    <div className="container mx-auto px-2 sm:px-0 ">
-                        <h2 className="lg:text-4xl sm:text-3xl text-2xl font-semibold py-8 text-left">
-                            Search results for:{' '}
-                            <span className="text-primaryColor">
-                                {searchText}
-                            </span>
-                        </h2>
+                    <div className="container mx-auto px-2 sm:px-0  ">
+                        <div className="py-2">
+                            <h2 className="lg:text-4xl sm:text-3xl text-2xl font-semibold py-6 text-left">
+                                Search results for:{' '}
+                                <span className="text-primaryColor">
+                                    {searchText}
+                                </span>
+                            </h2>
+                            <p className="text-xl font-normal">
+                                {searchData?.length
+                                    ? '"' + searchData?.length + '" data found'
+                                    : 'No data found'}
+                            </p>
+                        </div>
 
                         <div className="flex items-center justify-center gap-6">
                             {searchData.map((searchContest) => {

@@ -71,7 +71,7 @@ const AuthProvider = ({ children }) => {
         if (role) {
             setUserRole(role);
         }
-    }, [userRole, user]);
+    }, [userRole, user, logInGoogle, singIn]);
 
     const loginAndRegInfo = {
         user,
