@@ -100,18 +100,67 @@ async function run() {
                     .send({ message: 'You have no permission' });
             }
         };
+        //verify Contest Creator
+        const verifyAdminOrCreator = async (req, res, next) => {
+            const query = {
+                uEmail: req?.user?.email,
+            };
+            const options = {
+                projection: {
+                    role: 1,
+                },
+            };
+            const result = await userCollection.findOne(query, options);
 
-        //contest add
+            if (result.role === 'admin' || 'contest-creator') {
+                next();
+            } else {
+                return res
+                    .status(401)
+                    .send({ message: 'You have no permission' });
+            }
+        };
+
+        //my contest created
         app.get(
             '/contests',
             verifyToken,
             verifyContestCreator,
             async (req, res) => {
                 const creatorContest = req?.query?.email;
+                const pageNumber = req.query.pageNumber;
+                const offset = pageNumber;
+                const limit = 10;
 
                 const query = { 'author.email': creatorContest };
 
-                const result = await contestsCollection.find(query).toArray();
+                const result = await contestsCollection
+                    .find(query)
+                    .skip(offset * limit)
+                    .limit(limit)
+                    .toArray();
+
+                const contestCount = await contestsCollection
+                    .find(query)
+                    .toArray();
+
+                res.send({
+                    myAllContest: result,
+                    contestCount: contestCount.length,
+                });
+            }
+        );
+
+        //single contest details
+        app.get(
+            '/contests-details/:id',
+
+            async (req, res) => {
+                const contestId = req.params.id;
+
+                const query = { _id: new ObjectId(contestId) };
+                const result = await contestsCollection.findOne(query);
+
                 res.send(result);
             }
         );
@@ -141,9 +190,9 @@ async function run() {
         //    pagination function
         app.get('/contests-category', async (req, res) => {
             const contestCategory = req.query.category;
-            const pageNumber = req.query;
+            const pageNumber = req.query.pageNumber;
 
-            const offset = 0;
+            const offset = pageNumber;
             const limit = 10;
 
             const query = { contestType: contestCategory };
@@ -193,6 +242,24 @@ async function run() {
             }
         );
 
+        // all contest for admin
+        app.get('/all-contests', verifyToken, verifyAdmin, async (req, res) => {
+            const pageNumber = req.query.pageNumber;
+
+            const offset = pageNumber;
+            const limit = 10;
+
+            const result = await contestsCollection
+                .find()
+                .skip(offset * limit)
+                .limit(limit)
+                .toArray();
+            const countResult =
+                await contestsCollection.estimatedDocumentCount();
+
+            res.send({ allContest: result, contestCount: countResult });
+        });
+
         // Enrollment
         app.post('/enrollment', verifyToken, async (req, res) => {
             const enrolContest = req.body;
@@ -210,8 +277,6 @@ async function run() {
             const enrolContestElement = req.body;
 
             const filter = { enrolContestId: enrolContestId };
-
-            console.log(filter, enrolContestElement);
 
             const updateDoc = {
                 enrolContestElement,
@@ -244,7 +309,7 @@ async function run() {
         app.delete(
             '/contests/:id',
             verifyToken,
-            verifyContestCreator,
+            verifyAdminOrCreator,
             async (req, res) => {
                 const contestRemoveId = req.params.id;
 
@@ -289,6 +354,23 @@ async function run() {
             res.send(result);
         });
         // User registration
+
+        // all user manage
+        app.get('/users', verifyToken, verifyAdmin, async (req, res) => {
+            const pageNumber = req.query.pageNumber;
+
+            const offset = pageNumber;
+            const limit = 10;
+
+            const result = await userCollection
+                .find()
+                .skip(offset * limit)
+                .limit(limit)
+                .toArray();
+            const userCount = await userCollection.estimatedDocumentCount();
+
+            res.send({ allUser: result, userCount: userCount });
+        });
 
         // user role
         app.get('/user-role', verifyToken, async (req, res) => {
