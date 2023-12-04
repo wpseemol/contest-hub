@@ -19,6 +19,7 @@ import PrivetRouteForAdmin from '../PrivetRouteForAdmin/PrivetRouteForAdmin';
 import PrivetRouteForCreator from '../PrivetRouteForCreator/PrivetRouteForCreator';
 import DashboardComponent from '../components/DashboardComponent/DashboardComponent';
 import LeaderBoard from '../pages/leaderBoard/leaderBoard';
+import ContestDetails from '../pages/ContestDetails/ContestDetails';
 
 const router = createBrowserRouter([
     {
@@ -33,6 +34,10 @@ const router = createBrowserRouter([
             {
                 path: 'contest',
                 element: <Contest />,
+            },
+            {
+                path: 'contest/:id',
+                element: <ContestDetails />,
             },
             {
                 path: 'leader-board',

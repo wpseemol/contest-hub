@@ -7,3 +7,10 @@
         @apply text-primaryColor;
     }
 }
+
+@font-face {
+    font-family: 'Digital-7';
+    src: url('../assets/font/digital-7.ttf') format('truetype'); /* Adjust the path accordingly */
+    font-weight: normal;
+    font-style: normal;
+}

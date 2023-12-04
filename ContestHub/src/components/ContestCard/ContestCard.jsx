@@ -1,9 +1,12 @@
+import { useNavigate } from 'react-router-dom';
 import PaymentComponent from '../PaymentComponent/PaymentComponent';
 import PrimaryBtn from '../PrimaryBtn/PrimaryBtn';
 import PropTypes from 'prop-types';
 const ContestCard = ({ contest }) => {
+    const navigate = useNavigate();
+
     const handelDetails = () => {
-        console.log(contest?._id);
+        navigate(`/contest/${contest?._id}`);
     };
 
     const enrolContest = {

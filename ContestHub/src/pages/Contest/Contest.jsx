@@ -63,7 +63,7 @@ const Contest = () => {
             <div className="bg-[#f2f2f2] py-10 min-h-[38rem]">
                 <Container>
                     {/* Breadcrumb */}
-                    <div className="flex items-center gap-3 my- text-xl font-semibold">
+                    <div className="flex items-center gap-3 text-xl font-semibold py-6">
                         <Link to="/" className="text-primaryColor">
                             ContestHub
                         </Link>

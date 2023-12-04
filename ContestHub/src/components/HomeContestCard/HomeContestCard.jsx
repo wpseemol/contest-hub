@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import ShortDescription from '../ShortDescription/ShortDescription';
 import PropTypes from 'prop-types';
 
@@ -33,12 +34,13 @@ const HomeContestCard = ({ contestCardData }) => {
                             }
                         />
                     </div>
-                    <button
+                    <Link
+                        to={`/contest/${contestCardData?._id}`}
                         className="py-2 px-5 border border-primaryColor text-primaryColor
                             rounded-full text-lg font-semibold
                             hover:bg-primaryColor hover:text-white duration-300">
                         <span>Details</span>
-                    </button>
+                    </Link>
                 </div>
                 <div className="mt-4 px-8 bg-primaryColor/50 text-white py-2 rounded-b-xl">
                     ContestHub, Best for Contest
