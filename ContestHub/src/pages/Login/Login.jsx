@@ -19,7 +19,7 @@ const Login = () => {
 
     const [nextLogin, setNextLogin] = useState(false);
 
-    const { singIn, logInGoogle, user } = useAuthProvider();
+    const { singIn, logInGoogle, user, setUserRole } = useAuthProvider();
 
     const publicBaseUrl = useAxiosPublic();
 
@@ -51,10 +51,17 @@ const Login = () => {
                         const userRole = await publicBaseUrl.get('/user-role');
 
                         localStorage.setItem('user-role', userRole.data.role);
+                        setUserRole(userRole.data.role);
                     });
 
                     location?.state
-                        ? navigate(location?.state?.from)
+                        ? navigate(
+                              location?.state?.from ===
+                                  ('/dashboard/manage-user' ||
+                                      '/dashboard/admin')
+                                  ? '/dashboard'
+                                  : location?.state?.from
+                          )
                         : navigate('/');
                     reset();
                 })
@@ -103,6 +110,7 @@ const Login = () => {
                 publicBaseUrl.post('/jwt', { email }).then(async () => {
                     const userRole = await publicBaseUrl.get('/user-role');
                     localStorage.setItem('user-role', userRole.data.role);
+                    setUserRole(userRole.data.role);
                 });
 
                 publicBaseUrl
@@ -117,7 +125,6 @@ const Login = () => {
                     })
                     .catch(() => {
                         setNextLogin(false);
-
                         Swal.fire({
                             position: 'top-end',
                             icon: 'success',
@@ -127,7 +134,13 @@ const Login = () => {
                         });
 
                         location?.state
-                            ? navigate(location?.state?.from)
+                            ? navigate(
+                                  location?.state?.from ===
+                                      ('/dashboard/manage-user' ||
+                                          '/dashboard/admin')
+                                      ? '/dashboard'
+                                      : location?.state?.from
+                              )
                             : navigate('/');
                         setLoading(false);
                     });

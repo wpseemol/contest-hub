@@ -70,8 +70,10 @@ const AuthProvider = ({ children }) => {
         const role = localStorage.getItem('user-role');
         if (role) {
             setUserRole(role);
+        } else {
+            setUserRole(null);
         }
-    }, [userRole, user, logInGoogle, singIn]);
+    }, [userRole, user, loading]);
 
     const loginAndRegInfo = {
         user,
@@ -82,6 +84,7 @@ const AuthProvider = ({ children }) => {
         logInGoogle,
         userInformationSet,
         userRole,
+        setUserRole,
     };
     return (
         <AuthContext.Provider value={loginAndRegInfo}>

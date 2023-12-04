@@ -2,7 +2,7 @@ import { Link, Outlet } from 'react-router-dom';
 import DarkModeToggle from '../../components/DarkModeToggle/DarkModeToggle';
 import { RiMenu2Line } from 'react-icons/ri';
 import DashboardMenus from '../../components/DashboardMenus/DashboardMenus';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import useAuthProvider from '../../hook/useAuthProvider/useAuthProvider';
 import { ImSpinner9 } from 'react-icons/im';
 import { IoCloseOutline } from 'react-icons/io5';
@@ -13,7 +13,7 @@ import useAxiosPublic from '../../hook/useAxiosPublic/useAxiosPublic';
 const Dashboard = () => {
     const [isDryerClose, setIsDryerClose] = useState(false);
 
-    const { user, loading, logOut, userRole } = useAuthProvider();
+    const { user, loading, logOut, userRole, setUserRole } = useAuthProvider();
 
     const publicBaseUrl = useAxiosPublic();
 
@@ -30,6 +30,13 @@ const Dashboard = () => {
             });
         });
     };
+
+    useEffect(() => {
+        const role = localStorage.getItem('user-role');
+        if (role) {
+            setUserRole(role);
+        }
+    }, [userRole, user, setUserRole]);
 
     return (
         <div>

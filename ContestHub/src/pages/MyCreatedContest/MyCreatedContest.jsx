@@ -6,22 +6,37 @@ import useAuthProvider from '../../hook/useAuthProvider/useAuthProvider';
 import LoadingPage from '../LoadingPage/LoadingPage';
 import { FaEdit, FaRegTrashAlt } from 'react-icons/fa';
 import Swal from 'sweetalert2';
+import { useState } from 'react';
 
 const MyCreatedContest = () => {
+    const [clickButton, setClickButton] = useState(0);
+
     const secureBaseUrl = useAxiosSecure();
 
     const { user } = useAuthProvider();
 
-    const { data, refetch, isLoading } = useQuery({
+    const {
+        data = {},
+        refetch,
+        isLoading,
+    } = useQuery({
         queryKey: ['contests', user?.email],
 
         queryFn: async () => {
             const createdContestData = await secureBaseUrl.get(
-                `/contests?email=${user?.email}`
+                `/contests?email=${user?.email}&pageNumber=${clickButton}`
             );
             return createdContestData.data;
         },
     });
+
+    const { myAllContest = [], contestCount = 0 } = data;
+
+    const itemParPage = 10;
+
+    const pageNumber = Math.ceil(contestCount / itemParPage);
+
+    const pages = [...Array(pageNumber).keys()];
 
     const handelContestDeleted = (id) => {
         Swal.fire({
@@ -52,7 +67,7 @@ const MyCreatedContest = () => {
         return <LoadingPage />;
     }
 
-    if (data?.length <= 0) {
+    if (myAllContest?.length <= 0) {
         return (
             <>
                 <div className="mt-4">
@@ -87,11 +102,11 @@ const MyCreatedContest = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {data?.map((contest) => {
+                                {myAllContest?.map((contest) => {
                                     return (
                                         <tr
                                             key={contest?._id}
-                                            className="border-b border-opacity-10 dark:dark:border-gray-700 dark:bg-[#262626] hover:bg-primaryColor/10
+                                            className="border-b last:border-none border-opacity-10 dark:dark:border-gray-700 dark:bg-[#262626] hover:bg-primaryColor/10
                                              hover:dark:bg-primaryColor/5 duration-300 ">
                                             <td className="p-3 sm:block hidden">
                                                 <figure className="h-12 w-16">
@@ -147,6 +162,44 @@ const MyCreatedContest = () => {
                             </tbody>
                         </table>
                     </div>
+                </div>
+
+                {/* pagination  */}
+                <div className="w-fit mx-auto flex items-center justify-center gap-3 my-6">
+                    <button
+                        disabled={!clickButton}
+                        onClick={() => {
+                            clickButton && setClickButton(clickButton - 1);
+                        }}
+                        className="p-2 bg-slate-500 text-white font-bold rounded-md disabled:bg-red-200/60">
+                        Previous
+                    </button>
+                    {pages?.map((element, inx) => {
+                        return (
+                            <button
+                                key={inx}
+                                onClick={() => {
+                                    setClickButton(element);
+                                }}
+                                className={`${
+                                    clickButton === element
+                                        ? 'bg-primaryColor/50 text-white'
+                                        : 'bg-white text-neutral-700'
+                                } p-2 border font-bold rounded-md
+                                                hover:bg-primaryColor/50 hover:text-white duration-300`}>
+                                {element + 1}
+                            </button>
+                        );
+                    })}
+                    <button
+                        disabled={!(clickButton < pages?.length - 1)}
+                        onClick={() => {
+                            clickButton < pages?.length - 1 &&
+                                setClickButton(clickButton + 1);
+                        }}
+                        className="p-2 bg-slate-500 text-white font-bold rounded-md disabled:bg-red-200/60">
+                        Next
+                    </button>
                 </div>
             </div>
         </>

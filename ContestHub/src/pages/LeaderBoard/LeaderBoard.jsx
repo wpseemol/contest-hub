@@ -45,7 +45,7 @@ const LeaderBoard = () => {
             <div
                 className="container mx-auto pt-8
             ">
-                <div className="container p-2 mx-auto sm:p-4 dark:text-gray-100 w-fit">
+                <div className="container p-2 mx-auto sm:p-4  w-fit">
                     <h2 className="mb-4 text-2xl font-semibold lg:text-4xl md:text-3xl ">
                         Leader Board
                     </h2>
@@ -71,8 +71,8 @@ const LeaderBoard = () => {
                             {yourPosition && (
                                 <tbody className="text-lg">
                                     <tr
-                                        className="border-b border-opacity-20 dark:border-gray-700
-                                last:border-none dark:bg-gray-900
+                                        className="border-b border-opacity-20 
+                                last:border-none 
                                 hover:bg-primaryColor/5 duration-300">
                                         <td
                                             className="p-3 flex items-center gap-2 lg:min-w-[20rem] sm:min-w-[10rem]
@@ -95,10 +95,10 @@ const LeaderBoard = () => {
                                             <p>{yourPosition?.winnerCount}</p>
                                         </td>
                                         <td className="p-3 lg:min-w-[20rem] sm:min-w-[10rem] text-right">
-                                            <p className="dark:text-gray-400">
+                                            <p className="">
                                                 $
                                                 <span>
-                                                    {yourPosition?.prize}
+                                                    {yourPosition?.winnerPrize}
                                                 </span>
                                                 .00
                                             </p>
@@ -121,8 +121,8 @@ const LeaderBoard = () => {
                                     return (
                                         <tr
                                             key={inx}
-                                            className="border-b border-opacity-20 dark:border-gray-700
-                                last:border-none dark:bg-gray-900
+                                            className="border-b border-opacity-20 
+                                last:border-none 
                                 hover:bg-primaryColor/5 duration-300">
                                             <td
                                                 className="p-3 flex items-center gap-2 lg:min-w-[20rem] sm:min-w-[10rem]
@@ -145,7 +145,7 @@ const LeaderBoard = () => {
                                                 <p>{winner?.winner}</p>
                                             </td>
                                             <td className="p-3 lg:min-w-[20rem] sm:min-w-[10rem] text-right">
-                                                <p className="dark:text-gray-400">
+                                                <p className="">
                                                     $
                                                     <span>{winner?.prize}</span>
                                                     .00

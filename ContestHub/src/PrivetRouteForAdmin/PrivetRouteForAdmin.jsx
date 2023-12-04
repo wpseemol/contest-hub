@@ -16,7 +16,14 @@ const PrivetRouteForAdmin = ({ children }) => {
         return children;
     }
 
-    return <Navigate state={{ from: location.pathname }} to="/login" />;
+    return (
+        <Navigate
+            state={{
+                from: location.pathname,
+            }}
+            to="/login"
+        />
+    );
 };
 
 export default PrivetRouteForAdmin;

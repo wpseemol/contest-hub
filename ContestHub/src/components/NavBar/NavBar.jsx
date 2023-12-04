@@ -15,8 +15,7 @@ const NavBar = () => {
         { path: '/contest', menu: 'Contest' },
         { path: '/leader-board', menu: 'Leader Board' },
         { path: '/blog', menu: 'Blog' },
-        { path: '/contact', menu: 'Contact' },
-        { path: '/about', menu: 'About Us' },
+        { path: '/about', menu: 'About' },
     ];
     return (
         <>
