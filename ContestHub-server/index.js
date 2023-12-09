@@ -21,7 +21,7 @@ app.use(cors(corsOptions));
 app.use(express.json());
 app.use(cookieParser());
 
-// token verify
+// token verify jwt
 const verifyToken = async (req, res, next) => {
     const token = req.cookies['access-token'];
     if (!token) {
