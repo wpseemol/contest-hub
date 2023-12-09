@@ -7,7 +7,7 @@ const jwt = require('jsonwebtoken');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const port = process.env.PORT || 5000;
 
-// middleware
+// middleware me
 const corsOptions = {
     origin: [
         'http://localhost:5173',
