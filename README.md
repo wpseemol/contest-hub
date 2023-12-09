@@ -5,7 +5,7 @@ demo:
 
 <div align="center">
    
-   <img src="https://github.com/wpseemol/ContestHub/blob/main/demo/contestHUb.png?raw=true" width="100%" alt="ContestHub">
+   <img src="https://github.com/wpseemol/contest-hub/blob/main/demo/contestHUb.png?raw=true" width="100%" alt="ContestHub">
 
  </div>
 
